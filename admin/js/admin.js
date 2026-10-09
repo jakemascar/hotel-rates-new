@@ -681,6 +681,34 @@
 
         ensureTourPickupTimeOptionsField();
 
+        function ensureTourAddressOptionsField() {
+                var $setting = $tourModal.find('.hr-tour-booking-field-setting[data-field-key=address]');
+
+                if (!$setting.length || $setting.find('.hr-tour-booking-field-options').length) {
+                        return;
+                }
+
+                var $label = $('<label>')
+                        .addClass('hr-tour-booking-field-options-label')
+                        .attr('for', 'hr-tour-address-options')
+                        .text('Address options');
+                var $wrap = $('<div>').addClass('hr-tour-booking-field-options-wrap');
+                var $textarea = $('<textarea>', {
+                        id: 'hr-tour-address-options',
+                        name: 'tour_booking_fields[address][options]',
+                        rows: 4,
+                        placeholder: 'One address per line'
+                }).addClass('hr-tour-booking-field-options');
+                var $help = $('<p>')
+                        .addClass('description')
+                        .text('Enter one address per line. These options will appear in the Day Tour or Joiner booking form.');
+
+                $wrap.append($textarea, $help);
+                $setting.append($label, $wrap);
+        }
+
+        ensureTourAddressOptionsField();
+
         function openTourModal()  { $tourModal.show(); $tourOverlay.show(); $('body').css('overflow','hidden'); }
         function closeTourModal() { $tourModal.hide(); $tourOverlay.hide(); $('body').css('overflow',''); }
 
@@ -1024,7 +1052,7 @@
                 });
         }
 
-        function normalizeTourPickupTimeOptions(value) {
+        function normalizeTourBookingOptions(value) {
                 var rawOptions = $.isArray(value) ? value : String(value || '').split(String.fromCharCode(10));
                 var options = [];
 
@@ -1048,6 +1076,11 @@
                         pickup_time: {
                                 enabled: true,
                                 label: 'Pick-up Time',
+                                options: []
+                        },
+                        address: {
+                                enabled: false,
+                                label: 'Address',
                                 options: []
                         }
                 };
@@ -1073,7 +1106,7 @@
                         parsed[key] = {
                                 enabled: typeof field.enabled === 'undefined' ? fieldDefault.enabled : !!Number(field.enabled),
                                 label: field.label ? String(field.label) : fieldDefault.label,
-                                options: key === 'pickup_time' ? normalizeTourPickupTimeOptions(field.options) : []
+                                options: key === 'pickup_time' || key === 'address' ? normalizeTourBookingOptions(field.options) : []
                         };
                 });
 

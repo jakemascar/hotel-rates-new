@@ -801,6 +801,11 @@ class Hotel_Rates_DB {
                                 'label'   => __( 'Pick-up Time', 'hotel-rates' ),
                                 'options' => array(),
                         ),
+                        'address'         => array(
+                                'enabled' => false,
+                                'label'   => __( 'Address', 'hotel-rates' ),
+                                'options' => array(),
+                        ),
                 );
 
                 $fields = array();
@@ -814,7 +819,7 @@ class Hotel_Rates_DB {
                                 'label'   => '' !== $label ? $label : $default['label'],
                         );
 
-                        if ( 'pickup_time' === $field_key ) {
+                        if ( in_array( $field_key, array( 'pickup_time', 'address' ), true ) ) {
                                 $fields[ $field_key ]['options'] = self::normalize_motorbike_text_lines( $raw_field['options'] ?? array() );
                         }
                 }

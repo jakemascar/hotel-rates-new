@@ -279,6 +279,14 @@ foreach ( Hotel_Rates_DB::get_places() as $lookup_place ) {
 						</label>
 						<input type="text" name="tour_booking_fields[pickup_time][label]" class="hr-tour-booking-field-label" value="<?php esc_attr_e( 'Pick-up Time', 'hotel-rates' ); ?>" placeholder="<?php esc_attr_e( 'Pick-up Time', 'hotel-rates' ); ?>">
 					</div>
+					<div class="hr-tour-booking-field-setting" data-field-key="address">
+						<label class="hr-tour-booking-field-toggle">
+							<input type="hidden" name="tour_booking_fields[address][enabled]" value="0">
+							<input type="checkbox" name="tour_booking_fields[address][enabled]" value="1" class="hr-tour-booking-field-enabled">
+							<?php esc_html_e( 'Show field', 'hotel-rates' ); ?>
+						</label>
+						<input type="text" name="tour_booking_fields[address][label]" class="hr-tour-booking-field-label" value="<?php esc_attr_e( 'Address', 'hotel-rates' ); ?>" placeholder="<?php esc_attr_e( 'Address', 'hotel-rates' ); ?>">
+					</div>
 				</div>
 
 				<div class="hr-day-tour-pax-range" hidden>
