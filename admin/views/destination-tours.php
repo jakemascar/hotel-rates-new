@@ -5,6 +5,7 @@ $destinations = $is_edit ? json_decode( $edit_destination_tour->destinations ?? 
 $destinations = Hotel_Rates_DB::normalize_destination_tour_destinations( is_array( $destinations ) ? $destinations : array() );
 $pickup_addons = $is_edit ? json_decode( $edit_destination_tour->pickup_addons ?? '[]', true ) : array();
 $pickup_addons = Hotel_Rates_DB::normalize_port_transfer_addons( is_array( $pickup_addons ) ? $pickup_addons : array() );
+$pickup_addon_placeholder = Hotel_Rates_DB::normalize_destination_tour_addon_placeholder( $is_edit ? ( $edit_destination_tour->pickup_addon_placeholder ?? '' ) : '' );
 $pickup_times = $is_edit ? json_decode( $edit_destination_tour->pickup_times ?? '[]', true ) : array();
 $pickup_times = Hotel_Rates_DB::normalize_motorbike_text_lines( is_array( $pickup_times ) ? $pickup_times : array() );
 $credit_card_fee_percent = $is_edit && null !== $edit_destination_tour->credit_card_fee_percent ? (float) $edit_destination_tour->credit_card_fee_percent : 5.0;
@@ -90,7 +91,12 @@ if ( empty( $pickup_times ) ) {
                         </div>
 
                         <div class="hr-destination-tour-admin-addons">
-                                <h3><?php esc_html_e( 'Pick-up Outside Dumaguete City Add-ons', 'hotel-rates' ); ?></h3>
+                                <h3><?php esc_html_e( 'Pick-up Add-ons', 'hotel-rates' ); ?></h3>
+                                <div class="hr-reg-field">
+                                        <label for="hr-destination-tour-addon-placeholder"><?php esc_html_e( 'First Dropdown Option', 'hotel-rates' ); ?></label>
+                                        <input type="text" id="hr-destination-tour-addon-placeholder" name="pickup_addon_placeholder" class="hr-reg-input" value="<?php echo esc_attr( $pickup_addon_placeholder ); ?>" required>
+                                        <p class="description"><?php esc_html_e( 'Shown as the first, unpriced option in this Destination Tour booking form’s add-on dropdown.', 'hotel-rates' ); ?></p>
+                                </div>
                                 <table class="widefat fixed striped hr-destination-tour-addon-table">
                                         <thead>
                                                 <tr>

@@ -933,14 +933,6 @@ class Hotel_Rates_Shortcodes {
 
                 $package_details = Hotel_Rates_DB::normalize_tour_package_details( $tour_rate->package_details ?? '' );
                 $children_rates  = Hotel_Rates_DB::normalize_tour_children_rates( $tour_rate->children_rates ?? '' );
-                $child_discount  = isset( $children_rates['discount_percent'] ) ? (float) $children_rates['discount_percent'] : 0.0;
-                $child_discount_label = floor( $child_discount ) === $child_discount
-                        ? number_format_i18n( $child_discount, 0 )
-                        : rtrim( rtrim( number_format_i18n( $child_discount, 2 ), '0' ), '.,' );
-                $child_discount_text = sprintf(
-                        __( 'Each child uses the adult rate for the total adults plus children count, then %s%% is applied.', 'hotel-rates' ),
-                        $child_discount_label
-                );
                 $rate_rows = array();
 
                 for ( $pax = 1; $pax <= $max_pax; $pax++ ) {
@@ -963,8 +955,7 @@ class Hotel_Rates_Shortcodes {
                                 $tour_rate,
                                 $rate_rows,
                                 $package_details,
-                                $children_rates,
-                                $child_discount_text
+                                $children_rates
                         );
                 }
 
@@ -1019,18 +1010,15 @@ class Hotel_Rates_Shortcodes {
                                                                 <?php endif; ?>
                                                         </tr>
                                                 <?php endforeach; ?>
-						<?php if ( ! empty( $children_rates['enabled'] ) ) : ?>
+						<?php if ( ! empty( $children_rates['enabled'] ) && ! empty( $children_rates['information_lines'] ) ) : ?>
 							<tr class="hr-specific-tour-child-discount-row hr-specific-tour-desktop-child-discount">
 								<td colspan="3">
-									<?php echo esc_html( $child_discount_text ); ?>
+									<?php echo wp_kses_post( $this->render_tour_child_rate_information( $children_rates ) ); ?>
 								</td>
 							</tr>
-						<?php endif; ?>
-						<?php if ( ! empty( $children_rates['enabled'] ) ) : ?>
 							<tr class="hr-specific-tour-child-discount-row hr-specific-tour-mobile-child-discount">
 								<td colspan="3">
-									<strong><?php esc_html_e( 'Child Rate Information', 'hotel-rates' ); ?></strong>
-									<p><?php echo esc_html( $child_discount_text ); ?></p>
+									<?php echo wp_kses_post( $this->render_tour_child_rate_information( $children_rates ) ); ?>
 								</td>
 							</tr>
 						<?php endif; ?>
@@ -1043,10 +1031,23 @@ class Hotel_Rates_Shortcodes {
                 return ob_get_clean();
         }
 
+        private function render_tour_child_rate_information( $children_rates ) {
+                $lines = $children_rates['information_lines'];
+                $title = $children_rates['information_title'] ?? __( 'Child Rate', 'hotel-rates' );
+                $html  = '<strong class="hr-specific-tour-child-information-title">' . esc_html( $title ) . '</strong>';
+                $html .= '<ul class="hr-specific-tour-child-information-list">';
+
+                foreach ( $lines as $line ) {
+                        $html .= '<li>' . esc_html( $line ) . '</li>';
+                }
+
+                return $html . '</ul>';
+        }
+
         /**
          * Render the compact two-column rate table used only by Joiner tours.
          */
-        private function render_specific_joiner_rate( $tour_rate_id, $tour_rate, $rate_rows, $package_details, $children_rates, $child_discount_text ) {
+        private function render_specific_joiner_rate( $tour_rate_id, $tour_rate, $rate_rows, $package_details, $children_rates ) {
                 $joiner_rate = reset( $rate_rows );
                 $quote       = chr( 34 );
                 $html        = '<div class=' . $quote . 'hr-sc-wrap hr-specific-tour-rates hr-specific-tour-rates-joiner' . $quote;
@@ -1077,9 +1078,9 @@ class Hotel_Rates_Shortcodes {
 
                 $html .= '</td></tr>';
 
-                if ( ! empty( $children_rates['enabled'] ) ) {
+                if ( ! empty( $children_rates['enabled'] ) && ! empty( $children_rates['information_lines'] ) ) {
                         $html .= '<tr class=' . $quote . 'hr-specific-tour-child-discount-row' . $quote . '>';
-                        $html .= '<td colspan=2>' . esc_html( $child_discount_text ) . '</td></tr>';
+                        $html .= '<td colspan=2>' . $this->render_tour_child_rate_information( $children_rates ) . '</td></tr>';
                 }
 
                 return $html . '</tbody></table></div></div>';

@@ -335,6 +335,13 @@ foreach ( Hotel_Rates_DB::get_places() as $lookup_place ) {
 						<input type="number" step="0.01" min="0" max="100" name="tour_children_rates[discount_percent]" id="hr-tour-child-discount-percent" class="hr-pax-input" placeholder="0">
 						<p class="description"><?php esc_html_e( 'Each child uses the adult rate for the total adults plus children count, then this discount is applied.', 'hotel-rates' ); ?></p>
 					</div>
+					<div class="hr-tour-child-information-field" style="display:none;">
+						<label for="hr-tour-child-information-title"><?php esc_html_e( 'Child Rate Information Heading', 'hotel-rates' ); ?></label>
+						<input type="text" name="tour_children_rates[information_title]" id="hr-tour-child-information-title" class="hr-reg-input" value="<?php esc_attr_e( 'Child Rate', 'hotel-rates' ); ?>">
+						<label for="hr-tour-child-information-lines"><?php esc_html_e( 'Child Rate Information', 'hotel-rates' ); ?></label>
+						<textarea name="tour_children_rates[information_lines]" id="hr-tour-child-information-lines" class="hr-reg-input" rows="4" placeholder="<?php esc_attr_e( '0–2 years old: FREE', 'hotel-rates' ); ?>"></textarea>
+						<p class="description"><?php esc_html_e( 'Enter one age or child rate rule per line. Leave blank to hide the child rate information below the Day Tour or Joiner Tour rate table. This text does not change booking prices.', 'hotel-rates' ); ?></p>
+					</div>
 					<div class="hr-modal-pax-grid hr-tour-children-pax-grid">
 						<?php for ( $p = 1; $p <= $max_pax; $p++ ) : ?>
 						<div class="hr-modal-pax-cell">

@@ -515,6 +515,20 @@
         font-size: 15px;
 }
 
+.hr-tour-child-information-field {
+        margin-top: 16px;
+}
+
+.hr-tour-child-information-field label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: 600;
+}
+
+.hr-tour-child-information-field textarea {
+        resize: vertical;
+}
+
 .hr-tour-package-details h3 {
         margin: 0 0 8px;
         font-size: 15px;

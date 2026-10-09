@@ -3,7 +3,7 @@ Contributors: islanddiaries
 Tags: hotel, tours, booking, rentals, rates, travel
 Requires at least: 5.8
 Tested up to: 6.7
-Stable tag: 1.5.222
+Stable tag: 1.5.225
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -27,7 +27,7 @@ Rates are entered in Philippine pesos (PHP). If YayCurrency is available, the pl
 * Boat Rental: Set rates by passenger capacity, boarding times, an optional larger-boat upgrade, and a credit card fee.
 * Self-Drive Vehicle Rental: Set vehicles, stock, daily rates, rental and return dates, delivery fees, and a credit card fee.
 * Port Transfer: Set routes, transfer times, one-way or return details, add-ons, and a convenience fee.
-* Destination Tour: Set destinations, durations, rates, pickup options, and a credit card fee.
+* Destination Tour: Set destinations, durations, rates, pickup options, an editable first add-on dropdown option, and a credit card fee.
 * Pick-up & Drop-off: Set locations, route rates, pickup times, passenger details, and add-ons.
 
 The plugin also adds nationality, Phone / WhatsApp, and an optional special request to the WooCommerce checkout. Booking selections appear in cart and order details.
@@ -72,6 +72,15 @@ Day Tour and Joiner Tour records can include repeatable Details of the Package s
 3. Complete the setup steps above before publishing linked booking products.
 
 == Changelog ==
+
+= 1.5.225 =
+* Added a per-tour setting for the first option in the Destination Tour pick-up add-on dropdown.
+
+= 1.5.224 =
+* Hide the child rate information row on Day Tour and Joiner Tour tables when no information lines are entered.
+
+= 1.5.223 =
+* Added editable child rate information per Day Tour and Joiner Tour for the specific tour rate table.
 
 = 1.5.222 =
 * Moved the Package Deal payment choice below the package selections and total in the booking form.

@@ -158,6 +158,7 @@ class Hotel_Rates_DB {
                         tour_name      VARCHAR(255)     NOT NULL,
                         destinations   LONGTEXT         NULL,
                         pickup_addons  LONGTEXT         NULL,
+                        pickup_addon_placeholder VARCHAR(255) NULL,
                         pickup_times   LONGTEXT         NULL,
                         credit_card_fee_percent DECIMAL(8,2) NULL,
                         created_at     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -287,6 +288,7 @@ class Hotel_Rates_DB {
                         tour_name      VARCHAR(255)     NOT NULL,
                         destinations   LONGTEXT         NULL,
                         pickup_addons  LONGTEXT         NULL,
+                        pickup_addon_placeholder VARCHAR(255) NULL,
                         pickup_times   LONGTEXT         NULL,
                         credit_card_fee_percent DECIMAL(8,2) NULL,
                         created_at     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -325,6 +327,9 @@ class Hotel_Rates_DB {
                 }
 
                 $destination_tour_cols = $wpdb->get_col( "SHOW COLUMNS FROM {$wpdb->prefix}hr_destination_tours" );
+                if ( ! in_array( 'pickup_addon_placeholder', $destination_tour_cols, true ) ) {
+                        $wpdb->query( "ALTER TABLE {$wpdb->prefix}hr_destination_tours ADD COLUMN pickup_addon_placeholder VARCHAR(255) NULL AFTER pickup_addons" );
+                }
                 if ( ! in_array( 'credit_card_fee_percent', $destination_tour_cols, true ) ) {
                         $wpdb->query( "ALTER TABLE {$wpdb->prefix}hr_destination_tours ADD COLUMN credit_card_fee_percent DECIMAL(8,2) NULL AFTER pickup_times" );
                 }
@@ -841,12 +846,19 @@ class Hotel_Rates_DB {
                         'enabled'          => ! empty( $raw_rates['enabled'] ),
                         'label'            => __( 'Children', 'hotel-rates' ),
                         'discount_percent' => 0.0,
+                        'information_title' => __( 'Child Rate', 'hotel-rates' ),
+                        'information_lines' => self::normalize_motorbike_text_lines( $raw_rates['information_lines'] ?? array() ),
                         'prices'           => array(),
                 );
 
                 $label = sanitize_text_field( $raw_rates['label'] ?? ( $raw_rates['children_label'] ?? ( $raw_rates['childrenLabel'] ?? '' ) ) );
                 if ( '' !== $label ) {
                         $rates['label'] = $label;
+                }
+
+                $information_title = sanitize_text_field( $raw_rates['information_title'] ?? '' );
+                if ( '' !== $information_title ) {
+                        $rates['information_title'] = $information_title;
                 }
 
                 $discount_percent = self::maybe_null( $raw_rates['discount_percent'] ?? ( $raw_rates['discountPercent'] ?? null ) );
@@ -1676,6 +1688,12 @@ class Hotel_Rates_DB {
                 return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}hr_destination_tours WHERE id = %d", $id ) );
         }
 
+        public static function normalize_destination_tour_addon_placeholder( $value ) {
+                $label = sanitize_text_field( (string) $value );
+
+                return '' !== $label ? $label : __( 'For Pick-up Outside Dumaguete City', 'hotel-rates' );
+        }
+
         public static function save_destination_tour( $data ) {
                 global $wpdb;
 
@@ -1688,6 +1706,7 @@ class Hotel_Rates_DB {
                         'tour_name'               => sanitize_text_field( $data['tour_name'] ?? '' ),
                         'destinations'            => wp_json_encode( $destinations ),
                         'pickup_addons'           => wp_json_encode( $pickup_addons ),
+                        'pickup_addon_placeholder' => self::normalize_destination_tour_addon_placeholder( $data['pickup_addon_placeholder'] ?? '' ),
                         'pickup_times'            => wp_json_encode( $pickup_times ),
                         'credit_card_fee_percent' => null === $credit_card_fee_percent ? 5.0 : max( 0.0, (float) $credit_card_fee_percent ),
                 );

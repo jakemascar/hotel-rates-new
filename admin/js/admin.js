@@ -852,9 +852,11 @@
                 $tourModal.find('.hr-tour-children-rates').toggle(childRateTour);
                 $tourModal.find('.hr-tour-child-label-field').toggle(childRateTour);
                 $tourModal.find('.hr-tour-child-discount-field').toggle(childRateTour);
+                $tourModal.find('.hr-tour-child-information-field').toggle(childRateTour);
                 $tourModal.find('.hr-tour-children-pax-grid').toggle(false);
                 $tourModal.find('.hr-tour-child-label-field :input').prop('disabled', !childRateTour);
                 $tourModal.find('.hr-tour-child-discount-field :input').prop('disabled', !childRateTour);
+                $tourModal.find('.hr-tour-child-information-field :input').prop('disabled', !childRateTour);
                 $tourModal.find('.hr-tour-children-pax-grid :input').prop('disabled', true);
                 $tourModal.find('.hr-tour-children-rate-help').text(dayTour ? 'Enable Children guests for this Day Tour and enter the child discount percentage.' : 'Enable Children guests for this Joiner and enter the child discount percentage.');
                 $tourModal.find('.hr-tour-booking-fields').toggle(!airportTransfer);
@@ -1147,6 +1149,8 @@
                         enabled: parsed && typeof parsed.enabled !== 'undefined' ? !!Number(parsed.enabled) : false,
                         label: parsed && parsed.label ? String(parsed.label) : 'Children',
                         discountPercent: parsed && typeof parsed.discount_percent !== 'undefined' ? Number(parsed.discount_percent) : (parsed && typeof parsed.discountPercent !== 'undefined' ? Number(parsed.discountPercent) : 0),
+                        informationTitle: parsed && parsed.information_title ? String(parsed.information_title) : 'Child Rate',
+                        informationLines: parsed && parsed.information_lines ? parsed.information_lines : [],
                         prices: prices
                 };
         }
@@ -1157,6 +1161,8 @@
                 $('#hr-tour-children-rates-enabled').prop('checked', !!childrenRates.enabled);
                 $('#hr-tour-child-label').val(childrenRates.label || 'Children');
                 $('#hr-tour-child-discount-percent').val(Number.isFinite(childrenRates.discountPercent) ? childrenRates.discountPercent : '');
+                $('#hr-tour-child-information-title').val(childrenRates.informationTitle);
+                $('#hr-tour-child-information-lines').val($.isArray(childrenRates.informationLines) ? childrenRates.informationLines.join('\n') : String(childrenRates.informationLines));
 
                 for ( var p = 1; p <= 12; p++ ) {
                         $('#hr-tour-children-pax-' + p).val(childrenRates.prices && childrenRates.prices[String(p)] !== null && typeof childrenRates.prices[String(p)] !== 'undefined' ? childrenRates.prices[String(p)] : '');

@@ -3211,7 +3211,7 @@
                         html += '<div class="hr-destination-tour-addons">';
                         html += '<div class="hr-destination-tour-addons-title">' + escapeHtml(window.hrBooking ? window.hrBooking.destinationTourAddonsLabel : 'Add-ons:') + '</div>';
                         html += '<select class="hr-destination-tour-pickup-addon-select" name="hr_destination_tour_pickup_addon_display">';
-                        html += '<option value="">' + escapeHtml(window.hrBooking ? window.hrBooking.destinationTourAddonPlaceholder : 'For Pick-up Outside Dumaguete City') + '</option>';
+                        html += '<option value="">' + escapeHtml(destinationTourData.pickupAddonPlaceholder || (window.hrBooking ? window.hrBooking.destinationTourAddonPlaceholder : 'For Pick-up Outside Dumaguete City')) + '</option>';
                         pickupAddons.forEach(function (addon, index) {
                                 var label = addon.label || '';
                                 var rate = Number(addon.rate || 0);

@@ -827,7 +827,7 @@ class Hotel_Rates_Booking {
                                                                 <?php esc_html_e( 'Add-ons:', 'hotel-rates' ); ?>
                                                         </div>
                                                         <select class="hr-destination-tour-pickup-addon-select" name="hr_destination_tour_pickup_addon_display">
-                                                                <option value=""><?php esc_html_e( 'For Pick-up Outside Dumaguete City', 'hotel-rates' ); ?></option>
+                                                                <option value=""><?php echo esc_html( $destination_tour_data['pickupAddonPlaceholder'] ); ?></option>
                                                                 <?php foreach ( $destination_tour_data['pickupAddons'] as $addon_index => $addon ) : ?>
                                                                         <?php
                                                                         $addon_label = (string) ( $addon['label'] ?? '' );
@@ -7960,6 +7960,7 @@ class Hotel_Rates_Booking {
                         'tourName'     => $tour->tour_name,
                         'destinations' => $destinations,
                         'pickupAddons' => $pickup_addons,
+                        'pickupAddonPlaceholder' => Hotel_Rates_DB::normalize_destination_tour_addon_placeholder( $tour->pickup_addon_placeholder ?? '' ),
                         'pickupTimes'  => $pickup_times,
                 );
 

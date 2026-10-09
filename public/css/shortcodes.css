@@ -114,6 +114,21 @@ table.hr-sc-table th {
 	text-align: left;
 }
 
+.hr-specific-tour-child-information-title {
+	display: block;
+	margin-bottom: 0.35em;
+}
+
+.hr-specific-tour-child-information-list {
+	margin: 0;
+	padding-left: 1.4em;
+	font-weight: 400;
+}
+
+.hr-specific-tour-child-information-list li + li {
+	margin-top: 0.2em;
+}
+
 .hr-specific-tour-mobile-child-discount {
 	display: none;
 }
