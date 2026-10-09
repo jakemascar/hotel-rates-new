@@ -1,0 +1,1208 @@
+/* ── Hotel Rates Manager — Shortcode Frontend Styles ────────────────────── */
+
+table.hr-sc-table th {
+    color: #fff;
+}
+
+.hr-sc-wrap {
+	margin: 1.5em 0;
+	font-family: inherit;
+}
+
+/* Specific Day Tour/Joiner table layout. */
+.hr-sc-wrap.hr-specific-tour-rates {
+	display: block;
+	clear: both;
+	margin: 0;
+	padding: 0;
+}
+
+.hr-specific-tour-rates .hr-sc-table-overflow {
+	max-width: 100%;
+	overflow-x: visible;
+}
+
+.hr-specific-tour-rates table.hr-specific-tour-rate-table {
+	width: 100%;
+	min-width: 0;
+	table-layout: fixed;
+}
+
+.hr-specific-tour-rates .hr-specific-tour-rate-table thead tr {
+	background: #f3f6fa;
+}
+
+.hr-specific-tour-rates .hr-specific-tour-rate-table thead th {
+	color: #1f2937;
+	text-align: left;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+.hr-specific-tour-rate-table col.hr-specific-tour-rate-col-pax,
+.hr-specific-tour-rate-table col.hr-specific-tour-rate-col-price {
+	width: 16.6667%;
+}
+
+.hr-specific-tour-rate-table col.hr-specific-tour-rate-col-details {
+	width: 66.6666%;
+}
+
+.hr-specific-tour-rate-table-joiner col.hr-specific-tour-rate-col-price {
+	width: 26.6667%;
+}
+
+.hr-specific-tour-rate-table-joiner col.hr-specific-tour-rate-col-details {
+	width: 73.3333%;
+}
+
+.hr-specific-tour-rate-table-joiner td.hr-specific-tour-rate-price {
+	padding: 16px 14px;
+	vertical-align: middle;
+}
+
+.hr-specific-tour-rate-table td.hr-specific-tour-rate-pax,
+.hr-specific-tour-rate-table td.hr-specific-tour-rate-price {
+	text-align: left;
+	white-space: nowrap;
+}
+
+.hr-specific-tour-rate-table td.hr-specific-tour-package-details {
+	padding: 0 16px 14px;
+	vertical-align: top;
+	overflow-wrap: anywhere;
+}
+
+.hr-specific-tour-package-detail-group + .hr-specific-tour-package-detail-group {
+	margin-top: 0;
+}
+
+.hr-specific-tour-package-detail-group h4 {
+	margin: 0 0 0.55em;
+	color: #1f2937;
+	font-size: 0.92em !important;
+	line-height: 1.35;
+	font-weight: 700;
+}
+
+.hr-specific-tour-rate-table tbody tr:first-child > td:nth-child(-n+2) {
+	background-color: #fff !important;
+}
+
+.hr-specific-tour-package-detail-group ul {
+	margin: 0;
+	padding-left: 1.4em;
+}
+
+.hr-specific-tour-package-detail-group li {
+	margin: 0 0 0.45em;
+	line-height: 1.45;
+}
+
+.hr-specific-tour-package-detail-group li:last-child {
+	margin-bottom: 0;
+}
+
+.hr-specific-tour-rate-table .hr-specific-tour-child-discount-row td {
+	padding: 12px 14px;
+	background: #f8fafc;
+	border-top: 1px solid #dbe3ee;
+	color: #1f2937;
+	font-size: 0.92em;
+	font-weight: 600;
+	line-height: 1.45;
+	text-align: left;
+}
+
+.hr-specific-tour-mobile-child-discount {
+	display: none;
+}
+
+@media ( max-width: 767px ) {
+	.hr-specific-tour-rates .hr-sc-table-overflow {
+		overflow-x: visible;
+	}
+
+	.hr-specific-tour-rates table.hr-specific-tour-rate-table {
+		width: 100%;
+		min-width: 0;
+		table-layout: fixed;
+		font-size: clamp(0.72rem, 2.8vw, 0.82rem);
+	}
+
+
+	.hr-specific-tour-rate-table thead th {
+		padding: 8px 6px;
+		white-space: normal;
+		line-height: 1.3;
+		overflow-wrap: anywhere;
+	}
+
+	.hr-specific-tour-rate-table td.hr-specific-tour-rate-pax,
+	.hr-specific-tour-rate-table td.hr-specific-tour-rate-price {
+		padding: 8px 6px;
+	}
+
+	.hr-specific-tour-rate-table td.hr-specific-tour-package-details {
+		display: table-cell;
+		padding: 8px 8px 10px;
+		vertical-align: top;
+		background: #fff;
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+
+	.hr-specific-tour-rate-table-joiner col.hr-specific-tour-rate-col-price {
+		width: 34%;
+	}
+
+	.hr-specific-tour-rate-table-joiner col.hr-specific-tour-rate-col-details {
+		width: 66%;
+	}
+
+	.hr-specific-tour-rate-table .hr-specific-tour-desktop-child-discount {
+		display: none;
+	}
+
+	.hr-specific-tour-rate-table .hr-specific-tour-mobile-child-discount {
+		display: table-row;
+	}
+
+	.hr-specific-tour-rate-table .hr-specific-tour-package-detail-group h4 {
+		font-size: 0.92em !important;
+		line-height: 1.3;
+	}
+
+	.hr-specific-tour-rate-table .hr-specific-tour-package-detail-group ul {
+		padding-left: 1.15em;
+	}
+
+	.hr-specific-tour-rate-table .hr-specific-tour-package-detail-group li {
+		margin-bottom: 0.35em;
+		line-height: 1.35;
+	}
+
+	.hr-specific-tour-rate-table .hr-specific-tour-mobile-child-discount td {
+		padding: 12px 10px;
+		border: 1px solid #dbe3ee;
+		background: #fff;
+		color: #1f2937;
+		font-size: 0.875em;
+		line-height: 1.45;
+		white-space: normal;
+	}
+
+	.hr-specific-tour-rate-table .hr-specific-tour-mobile-child-discount strong {
+		display: block;
+		margin-bottom: 0.45em;
+		font-size: 0.92em;
+		font-weight: 700;
+	}
+
+	.hr-specific-tour-rate-table .hr-specific-tour-mobile-child-discount p {
+		margin: 0;
+	}
+}
+
+/* Boat Rental capacity rate shortcode. */
+.hr-sc-wrap.hr-specific-boat-rates {
+	display: block;
+	clear: both;
+	margin: 12px 0 0;
+	padding: 0;
+}
+
+.hr-specific-boat-rates .hr-sc-table-overflow {
+	overflow-x: visible;
+}
+
+.hr-specific-boat-rates table.hr-boat-rate-table {
+	width: 100%;
+	min-width: 0;
+	table-layout: fixed;
+}
+
+.hr-specific-boat-rates .hr-boat-rate-table thead tr {
+	background: #f3f6fa;
+}
+
+.hr-specific-boat-rates .hr-boat-rate-table thead th {
+	padding: 10px 14px;
+	color: #1f2937;
+	text-align: left;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+.hr-boat-rate-table col.hr-boat-capacity-col {
+	width: 76%;
+}
+
+.hr-boat-rate-table col.hr-boat-price-col {
+	width: 24%;
+}
+
+.hr-specific-boat-rates .hr-boat-rate-table th.hr-boat-rate-heading,
+.hr-specific-boat-rates .hr-boat-rate-table td.hr-boat-price {
+	text-align: left;
+	white-space: nowrap;
+}
+
+.hr-specific-boat-rates .hr-boat-rate-table tbody td {
+	padding: 12px 14px;
+}
+
+@media ( max-width: 600px ) {
+	.hr-boat-rate-table col.hr-boat-capacity-col {
+		width: 68%;
+	}
+
+	.hr-boat-rate-table col.hr-boat-price-col {
+		width: 32%;
+	}
+
+	.hr-specific-boat-rates .hr-boat-rate-table thead th,
+	.hr-specific-boat-rates .hr-boat-rate-table tbody td {
+		padding: 9px 8px;
+	}
+}
+
+/* Motorbike daily rate shortcode. */
+.hr-sc-wrap.hr-specific-motorbike-rates {
+	display: block;
+	clear: both;
+	margin: 12px 0 0;
+	padding: 0;
+}
+
+.hr-specific-motorbike-rates .hr-sc-table-overflow {
+	overflow-x: visible;
+}
+
+.hr-specific-motorbike-rates table.hr-motorbike-rate-table {
+	width: 100%;
+	min-width: 0;
+	table-layout: fixed;
+}
+
+.hr-specific-motorbike-rates .hr-motorbike-rate-table thead tr {
+	background: #f3f6fa;
+}
+
+.hr-specific-motorbike-rates .hr-motorbike-rate-table thead th {
+	padding: 10px 14px;
+	color: #1f2937;
+	text-align: left;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+.hr-motorbike-rate-table col.hr-motorbike-model-col {
+	width: 58%;
+}
+
+.hr-motorbike-rate-table col.hr-motorbike-engine-col {
+	width: 20%;
+}
+
+.hr-motorbike-rate-table col.hr-motorbike-price-col {
+	width: 22%;
+}
+
+.hr-specific-motorbike-rates .hr-motorbike-rate-table th.hr-motorbike-engine-heading,
+.hr-specific-motorbike-rates .hr-motorbike-rate-table td.hr-motorbike-engine {
+	text-align: center;
+	white-space: nowrap;
+}
+
+.hr-specific-motorbike-rates .hr-motorbike-rate-table th.hr-motorbike-rate-heading,
+.hr-specific-motorbike-rates .hr-motorbike-rate-table td.hr-motorbike-price {
+	text-align: left;
+	white-space: nowrap;
+}
+
+.hr-specific-motorbike-rates .hr-motorbike-rate-table tbody td {
+	padding: 12px 14px;
+}
+
+@media ( max-width: 600px ) {
+	.hr-motorbike-rate-table col.hr-motorbike-model-col {
+		width: 50%;
+	}
+
+	.hr-motorbike-rate-table col.hr-motorbike-engine-col {
+		width: 22%;
+	}
+
+	.hr-motorbike-rate-table col.hr-motorbike-price-col {
+		width: 28%;
+	}
+
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table thead th,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table tbody td {
+		padding: 9px 7px;
+	}
+}
+
+/* Self-Drive daily rate shortcode. */
+.hr-sc-wrap.hr-specific-self-drive-rates {
+	display: block;
+	clear: both;
+	margin: 12px 0 0;
+	padding: 0;
+}
+
+.hr-specific-self-drive-rates .hr-sc-table-overflow {
+	overflow-x: visible;
+}
+
+.hr-specific-self-drive-rates table.hr-self-drive-rate-table {
+	width: 100%;
+	min-width: 0;
+	table-layout: fixed;
+}
+
+.hr-specific-self-drive-rates .hr-self-drive-rate-table thead tr {
+	background: #f3f6fa;
+}
+
+.hr-specific-self-drive-rates .hr-self-drive-rate-table thead th {
+	padding: 10px 14px;
+	color: #1f2937;
+	text-align: left;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+.hr-self-drive-rate-table col.hr-self-drive-vehicle-col {
+	width: 58%;
+}
+
+.hr-self-drive-rate-table col.hr-self-drive-seaters-col {
+	width: 20%;
+}
+
+.hr-self-drive-rate-table col.hr-self-drive-price-col {
+	width: 22%;
+}
+
+.hr-specific-self-drive-rates .hr-self-drive-rate-table th.hr-self-drive-seaters-heading,
+.hr-specific-self-drive-rates .hr-self-drive-rate-table td.hr-self-drive-seaters {
+	text-align: center;
+	white-space: nowrap;
+}
+
+.hr-specific-self-drive-rates .hr-self-drive-rate-table th.hr-self-drive-rate-heading,
+.hr-specific-self-drive-rates .hr-self-drive-rate-table td.hr-self-drive-price {
+	text-align: left;
+	white-space: nowrap;
+}
+
+.hr-specific-self-drive-rates .hr-self-drive-rate-table tbody td {
+	padding: 12px 14px;
+}
+
+@media ( max-width: 600px ) {
+	.hr-self-drive-rate-table col.hr-self-drive-vehicle-col {
+		width: 50%;
+	}
+
+	.hr-self-drive-rate-table col.hr-self-drive-seaters-col {
+		width: 22%;
+	}
+
+	.hr-self-drive-rate-table col.hr-self-drive-price-col {
+		width: 28%;
+	}
+
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table thead th,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table tbody td {
+		padding: 9px 7px;
+	}
+}
+
+/* Destination Tour rate shortcode. */
+.hr-sc-wrap.hr-specific-destination-tour-rates {
+	display: block;
+	clear: both;
+	margin: 12px 0 0;
+	padding: 0;
+}
+
+.hr-specific-destination-tour-rates .hr-sc-table-overflow {
+	overflow-x: visible;
+}
+
+.hr-specific-destination-tour-rates table.hr-destination-tour-rate-table {
+	width: 100%;
+	min-width: 0;
+	table-layout: fixed;
+}
+
+.hr-specific-destination-tour-rates .hr-destination-tour-rate-table thead tr {
+	background: #f3f6fa;
+}
+
+.hr-specific-destination-tour-rates .hr-destination-tour-rate-table thead th {
+	padding: 10px 14px;
+	color: #1f2937;
+	text-align: left;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+.hr-destination-tour-rate-table col.hr-destination-tour-name-col {
+	width: 64%;
+}
+
+.hr-destination-tour-rate-table col.hr-destination-tour-duration-col {
+	width: 18%;
+}
+
+.hr-destination-tour-rate-table col.hr-destination-tour-price-col {
+	width: 18%;
+}
+
+.hr-specific-destination-tour-rates .hr-destination-tour-rate-table th.hr-destination-tour-rate-heading,
+.hr-specific-destination-tour-rates .hr-destination-tour-rate-table td.hr-destination-tour-price {
+	text-align: left;
+	white-space: nowrap;
+}
+
+.hr-specific-destination-tour-rates .hr-destination-tour-rate-table tbody td {
+	padding: 12px 14px;
+}
+
+@media ( min-width: 601px ) {
+	.hr-sc-wrap.hr-specific-destination-tour-rates,
+	.hr-sc-wrap.hr-specific-self-drive-rates,
+	.hr-sc-wrap.hr-specific-motorbike-rates,
+	.hr-sc-wrap.hr-specific-boat-rates,
+	.hr-sc-wrap.hr-specific-port-transfer-rates {
+		width: 100%;
+		max-width: 100%;
+		min-width: 0;
+	}
+
+	.tour-plan-description > .hr-sc-wrap.hr-specific-destination-tour-rates,
+	.tour-plan-description > .hr-sc-wrap.hr-specific-self-drive-rates,
+	.tour-plan-description > .hr-sc-wrap.hr-specific-motorbike-rates,
+	.tour-plan-description > .hr-sc-wrap.hr-specific-boat-rates,
+	.tour-plan-description > .hr-sc-wrap.hr-specific-port-transfer-rates {
+		width: calc(100% + 32px);
+		max-width: none;
+	}
+
+	.tour-plan-description > .hr-specific-destination-tour-rates .hr-sc-table-overflow,
+	.tour-plan-description > .hr-specific-self-drive-rates .hr-sc-table-overflow,
+	.tour-plan-description > .hr-specific-motorbike-rates .hr-sc-table-overflow,
+	.tour-plan-description > .hr-specific-boat-rates .hr-sc-table-overflow,
+	.tour-plan-description > .hr-specific-port-transfer-rates .hr-sc-table-overflow {
+		max-width: none;
+	}
+
+	.hr-specific-destination-tour-rates .hr-sc-table-overflow,
+	.hr-specific-self-drive-rates .hr-sc-table-overflow,
+	.hr-specific-motorbike-rates .hr-sc-table-overflow,
+	.hr-specific-boat-rates .hr-sc-table-overflow,
+	.hr-specific-port-transfer-rates .hr-sc-table-overflow {
+		width: 100%;
+		max-width: 100%;
+		overflow-x: visible;
+	}
+
+	.hr-specific-destination-tour-rates table.hr-destination-tour-rate-table,
+	.hr-specific-self-drive-rates table.hr-self-drive-rate-table,
+	.hr-specific-motorbike-rates table.hr-motorbike-rate-table,
+	.hr-specific-boat-rates table.hr-boat-rate-table {
+		display: table !important;
+		width: 100% !important;
+		min-width: 0;
+		max-width: 100%;
+		table-layout: fixed !important;
+		border-collapse: collapse;
+	}
+
+	.hr-specific-destination-tour-rates .hr-destination-tour-rate-table colgroup,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table colgroup,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table colgroup,
+	.hr-specific-boat-rates .hr-boat-rate-table colgroup,
+	.hr-specific-port-transfer-rates .hr-port-transfer-rate-table colgroup {
+		display: table-column-group !important;
+	}
+
+	.hr-specific-destination-tour-rates .hr-destination-tour-rate-table thead,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table thead,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table thead,
+	.hr-specific-boat-rates .hr-boat-rate-table thead,
+	.hr-specific-port-transfer-rates .hr-port-transfer-rate-table thead {
+		display: table-header-group !important;
+	}
+
+	.hr-specific-destination-tour-rates .hr-destination-tour-rate-table tbody,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table tbody,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table tbody,
+	.hr-specific-boat-rates .hr-boat-rate-table tbody,
+	.hr-specific-port-transfer-rates .hr-port-transfer-rate-table tbody {
+		display: table-row-group !important;
+	}
+
+	.hr-specific-destination-tour-rates .hr-destination-tour-rate-table tr,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table tr,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table tr,
+	.hr-specific-boat-rates .hr-boat-rate-table tr,
+	.hr-specific-port-transfer-rates .hr-port-transfer-rate-table tr {
+		display: table-row !important;
+	}
+
+	.hr-specific-destination-tour-rates .hr-destination-tour-rate-table th,
+	.hr-specific-destination-tour-rates .hr-destination-tour-rate-table td,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table th,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table td,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table th,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table td,
+	.hr-specific-boat-rates .hr-boat-rate-table th,
+	.hr-specific-boat-rates .hr-boat-rate-table td,
+	.hr-specific-port-transfer-rates .hr-port-transfer-rate-table th,
+	.hr-specific-port-transfer-rates .hr-port-transfer-rate-table td {
+		display: table-cell !important;
+		min-width: 0;
+		max-width: 100%;
+		box-sizing: border-box;
+		white-space: nowrap;
+		overflow-wrap: normal;
+	}
+
+	.hr-specific-destination-tour-rates .hr-destination-tour-rate-table thead th,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table thead th,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table thead th,
+	.hr-specific-boat-rates .hr-boat-rate-table thead th,
+	.hr-specific-port-transfer-rates .hr-port-transfer-rate-table thead th {
+		height: auto !important;
+		padding: 10px 14px !important;
+		background: #f3f6fa;
+		line-height: 1.2 !important;
+		vertical-align: middle !important;
+	}
+
+	.hr-sc-wrap.hr-specific-destination-tour-rates table.hr-destination-tour-rate-table thead th.hr-destination-tour-name-heading,
+	.hr-sc-wrap.hr-specific-self-drive-rates table.hr-self-drive-rate-table thead th.hr-self-drive-vehicle-heading,
+	.hr-sc-wrap.hr-specific-motorbike-rates table.hr-motorbike-rate-table thead th.hr-motorbike-model-heading,
+	.hr-sc-wrap.hr-specific-boat-rates table.hr-boat-rate-table thead th.hr-boat-capacity-heading,
+	.hr-sc-wrap.hr-specific-port-transfer-rates table.hr-port-transfer-rate-table thead th.hr-port-transfer-route-heading {
+		width: auto !important;
+		min-width: 0 !important;
+		max-width: 100% !important;
+		padding: 10px 14px !important;
+		line-height: 1.2 !important;
+		text-align: left !important;
+		vertical-align: middle !important;
+	}
+}
+
+@media ( max-width: 600px ) {
+	.hr-specific-destination-tour-rates table.hr-destination-tour-rate-table,
+	.hr-specific-self-drive-rates table.hr-self-drive-rate-table,
+	.hr-specific-motorbike-rates table.hr-motorbike-rate-table {
+		table-layout: fixed;
+	}
+
+	.hr-specific-destination-tour-rates .hr-destination-tour-rate-table th:first-child,
+	.hr-specific-destination-tour-rates .hr-destination-tour-rate-table td.hr-destination-tour-name,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table th:first-child,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table td.hr-self-drive-vehicle,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table th:first-child,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table td.hr-motorbike-model {
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+
+	.hr-destination-tour-rate-table col.hr-destination-tour-name-col {
+		width: 54%;
+	}
+
+	.hr-destination-tour-rate-table col.hr-destination-tour-duration-col,
+	.hr-destination-tour-rate-table col.hr-destination-tour-price-col {
+		width: 23%;
+	}
+
+	.hr-specific-destination-tour-rates .hr-destination-tour-rate-table thead th,
+	.hr-specific-destination-tour-rates .hr-destination-tour-rate-table tbody td {
+		padding: 9px 7px;
+	}
+}
+
+/* Port Transfer rate matrix shortcode. */
+.hr-sc-wrap.hr-specific-port-transfer-rates {
+	display: block;
+	clear: both;
+	margin: 12px 0 0;
+	padding: 0;
+}
+
+.hr-specific-port-transfer-rates .hr-port-transfer-rate-group + .hr-port-transfer-rate-group {
+	margin-top: 1em;
+}
+
+.hr-specific-port-transfer-rates .hr-sc-table-overflow {
+	overflow-x: visible;
+}
+
+.hr-specific-port-transfer-rates table.hr-port-transfer-rate-table {
+	width: 100%;
+	min-width: 0;
+	table-layout: fixed;
+}
+
+.hr-specific-port-transfer-rates .hr-port-transfer-rate-table thead tr {
+	background: #f3f6fa;
+}
+
+.hr-specific-port-transfer-rates .hr-port-transfer-rate-table thead th {
+	padding: 10px 14px;
+	color: #1f2937;
+	text-align: left;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+.hr-port-transfer-rate-table col.hr-port-transfer-route-col {
+	width: 78%;
+}
+
+.hr-port-transfer-rate-table col.hr-port-transfer-price-col {
+	width: 22%;
+}
+
+.hr-specific-port-transfer-rates .hr-port-transfer-rate-table th.hr-port-transfer-rate-heading,
+.hr-specific-port-transfer-rates .hr-port-transfer-rate-table td.hr-port-transfer-price {
+	text-align: left;
+	white-space: nowrap;
+}
+
+.hr-specific-port-transfer-rates .hr-port-transfer-rate-table tbody td {
+	padding: 12px 14px;
+}
+
+@media ( max-width: 600px ) {
+	.hr-port-transfer-rate-table col.hr-port-transfer-route-col {
+		width: 68%;
+	}
+
+	.hr-port-transfer-rate-table col.hr-port-transfer-price-col {
+		width: 32%;
+	}
+
+	.hr-specific-port-transfer-rates .hr-port-transfer-rate-table thead th,
+	.hr-specific-port-transfer-rates .hr-port-transfer-rate-table tbody td {
+		padding: 9px 8px;
+	}
+}
+
+/* Accordion rate tables follow the Package Deal hotel-rate mobile pattern. */
+@media ( max-width: 600px ) {
+	:is(
+		.hr-specific-destination-tour-rates,
+		.hr-specific-self-drive-rates,
+		.hr-specific-motorbike-rates,
+		.hr-specific-boat-rates,
+		.hr-specific-port-transfer-rates
+	) .hr-sc-table-overflow {
+		width: 100%;
+		max-width: 100%;
+		overflow-x: auto !important;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+		border: 1px solid #dbe3ee;
+		border-radius: 0 !important;
+	}
+
+	:is(
+		.hr-specific-destination-tour-rates,
+		.hr-specific-self-drive-rates,
+		.hr-specific-motorbike-rates,
+		.hr-specific-boat-rates,
+		.hr-specific-port-transfer-rates
+	) table.hr-sc-table {
+		display: table !important;
+		width: 100% !important;
+		min-width: 560px !important;
+		max-width: none;
+		margin: 0;
+		border: 0;
+		border-radius: 0 !important;
+		border-collapse: collapse;
+		table-layout: fixed !important;
+		font-size: 0.8em;
+	}
+
+	:is(
+		.hr-specific-destination-tour-rates,
+		.hr-specific-self-drive-rates,
+		.hr-specific-motorbike-rates,
+		.hr-specific-boat-rates,
+		.hr-specific-port-transfer-rates
+	) .hr-sc-table thead,
+	:is(
+		.hr-specific-destination-tour-rates,
+		.hr-specific-self-drive-rates,
+		.hr-specific-motorbike-rates,
+		.hr-specific-boat-rates,
+		.hr-specific-port-transfer-rates
+	) .hr-sc-table thead tr {
+		background: #063b66 !important;
+		color: #fff;
+	}
+
+	:is(
+		.hr-specific-destination-tour-rates,
+		.hr-specific-self-drive-rates,
+		.hr-specific-motorbike-rates,
+		.hr-specific-boat-rates,
+		.hr-specific-port-transfer-rates
+	) .hr-sc-table thead th {
+		display: table-cell !important;
+		height: auto !important;
+		width: auto !important;
+		min-width: 0 !important;
+		max-width: none !important;
+		padding: 10px 12px !important;
+		border: 0;
+		border-radius: 0 !important;
+		background: #063b66 !important;
+		color: #fff !important;
+		font-weight: 700;
+		line-height: 24px !important;
+		text-align: left !important;
+		vertical-align: middle !important;
+		white-space: nowrap !important;
+		word-break: normal !important;
+		overflow-wrap: normal !important;
+	}
+
+	:is(
+		.hr-specific-destination-tour-rates,
+		.hr-specific-self-drive-rates,
+		.hr-specific-motorbike-rates,
+		.hr-specific-boat-rates,
+		.hr-specific-port-transfer-rates
+	) .hr-sc-table tbody tr {
+		background: #fff;
+		border-bottom: 1px solid #e5e7eb;
+	}
+
+	:is(
+		.hr-specific-destination-tour-rates,
+		.hr-specific-self-drive-rates,
+		.hr-specific-motorbike-rates,
+		.hr-specific-boat-rates,
+		.hr-specific-port-transfer-rates
+	) .hr-sc-table tbody tr:last-child {
+		border-bottom: 0;
+	}
+
+	:is(
+		.hr-specific-destination-tour-rates,
+		.hr-specific-self-drive-rates,
+		.hr-specific-motorbike-rates,
+		.hr-specific-boat-rates,
+		.hr-specific-port-transfer-rates
+	) .hr-sc-table tbody tr:nth-child(even) {
+		background: #f8fafc;
+	}
+
+	:is(
+		.hr-specific-destination-tour-rates,
+		.hr-specific-self-drive-rates,
+		.hr-specific-motorbike-rates,
+		.hr-specific-boat-rates,
+		.hr-specific-port-transfer-rates
+	) .hr-sc-table tbody td {
+		padding: 10px 12px;
+		border: 0;
+		color: #1f2937;
+		vertical-align: middle;
+	}
+
+	/* Fitted mobile tables for Motorbike, Self-Drive, and Boat Rental. */
+	.hr-specific-motorbike-rates .hr-sc-table-overflow,
+	.hr-specific-self-drive-rates .hr-sc-table-overflow,
+	.hr-specific-boat-rates .hr-sc-table-overflow {
+		padding: 0;
+		margin-left: 0;
+		box-sizing: border-box;
+		border: 0 !important;
+		overflow: visible !important;
+	}
+
+	.hr-specific-motorbike-rates table.hr-motorbike-rate-table,
+	.hr-specific-self-drive-rates table.hr-self-drive-rate-table,
+	.hr-specific-boat-rates table.hr-boat-rate-table {
+		position: relative !important;
+		right: 25px !important;
+		width: 108.81% !important;
+		min-width: 0 !important;
+		max-width: none !important;
+		margin-top: -16px !important;
+		margin-right: 11px !important;
+		margin-left: 12px !important;
+		box-sizing: border-box;
+		transform: none !important;
+		table-layout: fixed !important;
+		font-size: 0.74em;
+	}
+
+	.hr-motorbike-rate-table col.hr-motorbike-model-col {
+		width: 50%;
+	}
+
+	.hr-motorbike-rate-table col.hr-motorbike-engine-col {
+		width: 20%;
+	}
+
+	.hr-motorbike-rate-table col.hr-motorbike-price-col {
+		width: 30%;
+	}
+
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table thead th,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table tbody td,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table thead th,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table tbody td,
+	.hr-specific-boat-rates .hr-boat-rate-table thead th,
+	.hr-specific-boat-rates .hr-boat-rate-table tbody td {
+		padding: 8px 5px !important;
+		text-align: left !important;
+	}
+
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table thead th,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table thead th,
+	.hr-specific-boat-rates .hr-boat-rate-table thead th {
+		font-size: 0.92em;
+		line-height: 1.2 !important;
+	}
+
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table thead,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table thead tr,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table thead th,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table thead,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table thead tr,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table thead th,
+	.hr-specific-boat-rates .hr-boat-rate-table thead,
+	.hr-specific-boat-rates .hr-boat-rate-table thead tr,
+	.hr-specific-boat-rates .hr-boat-rate-table thead th {
+		background: #063b66 !important;
+		color: #fff !important;
+	}
+
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table th.hr-motorbike-model-heading,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table td.hr-motorbike-model,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table th.hr-self-drive-vehicle-heading,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table td.hr-self-drive-vehicle,
+	.hr-specific-boat-rates .hr-boat-rate-table th.hr-boat-capacity-heading,
+	.hr-specific-boat-rates .hr-boat-rate-table td.hr-boat-capacity {
+		padding-left: 10px !important;
+		margin-left: 0 !important;
+		text-indent: 0 !important;
+		transform: none !important;
+		white-space: normal !important;
+		word-break: normal !important;
+		overflow-wrap: anywhere !important;
+	}
+
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table th.hr-motorbike-engine-heading,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table td.hr-motorbike-engine,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table th.hr-motorbike-rate-heading,
+	.hr-specific-motorbike-rates .hr-motorbike-rate-table td.hr-motorbike-price,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table th.hr-self-drive-seaters-heading,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table td.hr-self-drive-seaters,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table th.hr-self-drive-rate-heading,
+	.hr-specific-self-drive-rates .hr-self-drive-rate-table td.hr-self-drive-price,
+	.hr-specific-boat-rates .hr-boat-rate-table th.hr-boat-rate-heading,
+	.hr-specific-boat-rates .hr-boat-rate-table td.hr-boat-price {
+		white-space: nowrap !important;
+	}
+}
+
+.hr-sc-title {
+	font-size: 1.15em;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	margin: 0 0 0.6em;
+	color: #111;
+}
+
+.hr-sc-table-overflow {
+	width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.hr-sc-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.875em;
+	min-width: 560px;
+}
+
+/* Header row */
+.hr-sc-table thead tr {
+	background-color: #1a2e4a;
+	color: #fff;
+}
+
+.hr-sc-table thead th {
+	padding: 10px 12px;
+	text-align: left;
+	font-weight: 700;
+	white-space: nowrap;
+	font-size: 0.92em;
+	letter-spacing: 0.02em;
+	border: none;
+}
+
+.hr-sc-table thead th.hr-sc-th-city {
+	min-width: 140px;
+	max-width: 180px;
+}
+
+.hr-sc-table thead th.hr-sc-th-bp {
+	min-width: 80px;
+	text-align: center;
+}
+
+/* Body rows */
+.hr-sc-table tbody tr {
+	border-bottom: 1px solid #e5e7eb;
+	background: #fff;
+	transition: background 0.12s;
+}
+
+.hr-sc-table tbody tr:hover {
+	background: #f3f6fa;
+}
+
+.hr-sc-table tbody td {
+	padding: 9px 12px;
+	vertical-align: middle;
+	color: #222;
+	border: none;
+}
+
+/* Hotel / Tour name column */
+td.hr-sc-hotel-name {
+	font-weight: 700;
+	color: #111;
+	white-space: nowrap;
+}
+
+/* Breakfast indicator */
+td.hr-sc-bp {
+	text-align: center;
+	font-size: 1em;
+}
+
+.hr-sc-check {
+	color: #16a34a;
+	font-weight: 700;
+}
+
+.hr-sc-cross {
+	color: #888;
+	font-weight: 700;
+}
+
+/* Price cells */
+td.hr-sc-price {
+	white-space: nowrap;
+	text-align: right;
+	color: #222;
+}
+
+/* Error / empty messages */
+.hr-sc-error,
+.hr-sc-empty {
+	color: #b91c1c;
+	font-style: italic;
+	font-size: 0.9em;
+}
+
+.hr-sc-empty {
+	color: #6b7280;
+}
+
+/* Responsive */
+@media ( max-width: 600px ) {
+
+	.hr-sc-title {
+		font-size: 1em;
+	}
+	.hr-sc-table {
+		font-size: 0.8em;
+	}
+	.hr-sc-table thead th,
+	.hr-sc-table tbody td {
+		padding: 7px 8px;
+	}
+}
+
+/* Package Deal hotel-rate shortcode. Kept separate from the general tables. */
+.hr-package-rates {
+	margin: 1.5em 0;
+	font-family: inherit;
+}
+
+/* Fallback for cached/legacy shortcode markup that still contains the title. */
+.hr-package-rates-title {
+	display: none !important;
+}
+
+.hr-package-rates-group + .hr-package-rates-group {
+	margin-top: 1.5em;
+}
+
+.hr-package-rates-place {
+	margin: 0 0 0.55em;
+	color: #1f2937;
+	font-size: 0.875em !important;
+	line-height: 1.2 !important;
+	font-weight: 700;
+}
+
+.hr-package-rates-overflow {
+	width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	border: 1px solid #dbe3ee;
+	border-radius: 0 !important;
+}
+
+.hr-package-rates-table {
+	width: 100%;
+	min-width: 760px;
+	margin: 0;
+	border: 0;
+	border-radius: 0 !important;
+	border-collapse: collapse;
+	font-size: 0.875em;
+}
+
+.hr-package-rates-table thead,
+.hr-package-rates-table thead tr {
+	background: #063b66;
+	border-radius: 0 !important;
+	color: #fff;
+}
+
+.hr-package-rates .hr-package-rates-overflow table.hr-package-rates-table > thead > tr > th {
+	display: table-cell !important;
+	box-sizing: border-box;
+	height: auto !important;
+	padding: 10px 12px !important;
+	border: 0;
+	border-radius: 0 !important;
+	color: #fff;
+	font-weight: 700;
+	line-height: 24px !important;
+	text-align: center;
+	vertical-align: middle !important;
+	white-space: nowrap;
+}
+
+.hr-package-rates .hr-package-rates-table .hr-package-rates-heading {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	height: auto !important;
+	min-height: 0 !important;
+	padding-top: 20px !important;
+	line-height: 24px !important;
+}
+
+.hr-package-rates .hr-package-rates-overflow table.hr-package-rates-table > thead > tr > th:first-child,
+.hr-package-rates .hr-package-rates-overflow table.hr-package-rates-table > thead > tr > th:nth-child(2) {
+	text-align: left !important;
+}
+
+.hr-package-rates .hr-package-rates-table > thead > tr > th:first-child .hr-package-rates-heading,
+.hr-package-rates .hr-package-rates-table > thead > tr > th:nth-child(2) .hr-package-rates-heading {
+	justify-content: flex-start !important;
+}
+
+.hr-package-rates .hr-package-rates-table > thead > tr > th:first-child .hr-package-rates-heading {
+	position: relative !important;
+	top: 6px !important;
+}
+
+.hr-package-rates .hr-package-rates-overflow table.hr-package-rates-table > thead > tr > th:first-child {
+	padding-left: 18px !important;
+}
+
+.hr-package-rates .hr-package-rates-overflow table.hr-package-rates-table > tbody > tr > th,
+.hr-package-rates .hr-package-rates-overflow table.hr-package-rates-table > tbody > tr > td {
+	vertical-align: middle !important;
+}
+
+.hr-package-rates .hr-package-rates-overflow table.hr-package-rates-table > tbody > tr > th.hr-package-rates-hotel {
+	padding-left: 18px !important;
+}
+
+.hr-package-rates-table tbody tr {
+	background: #fff;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.hr-package-rates-table tbody tr:last-child {
+	border-bottom: 0;
+}
+
+.hr-package-rates-table tbody tr:nth-child(even) {
+	background: #f8fafc;
+}
+
+.hr-package-rates-table tbody th,
+.hr-package-rates-table tbody td {
+	padding: 10px 12px;
+	border: 0;
+	color: #1f2937;
+	vertical-align: middle;
+}
+
+.hr-package-rates-hotel {
+	min-width: 180px;
+	font-weight: 700;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.hr-package-rates-meal {
+	min-width: 105px;
+	white-space: nowrap;
+}
+
+.hr-package-rates-price {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.hr-package-rates-price .woocommerce-Price-amount {
+	white-space: nowrap;
+}
+
+.hr-package-rates-message {
+	margin: 1em 0;
+	color: #6b7280;
+	font-style: italic;
+}
+
+@media ( max-width: 600px ) {
+	.hr-package-rates-table {
+		font-size: 0.8em;
+	}
+
+	.hr-package-rates-table thead th,
+	.hr-package-rates-table tbody th,
+	.hr-package-rates-table tbody td {
+		padding: 8px;
+	}
+}

@@ -1,0 +1,17 @@
+# Local editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local settings, logs, and temporary files
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+*.bak
+
+# Dependency installs and test output
+node_modules/
+coverage/
