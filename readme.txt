@@ -3,7 +3,7 @@ Contributors: islanddiaries
 Tags: hotel, tours, booking, rentals, rates, travel
 Requires at least: 5.8
 Tested up to: 6.7
-Stable tag: 1.5.221
+Stable tag: 1.5.222
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -72,6 +72,9 @@ Day Tour and Joiner Tour records can include repeatable Details of the Package s
 3. Complete the setup steps above before publishing linked booking products.
 
 == Changelog ==
+
+= 1.5.222 =
+* Moved the Package Deal payment choice below the package selections and total in the booking form.
 
 = 1.5.221 =
 * Address booking field is hidden by default for Day Tour and Joiner Tour records until enabled.

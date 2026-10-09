@@ -11,6 +11,7 @@ class Hotel_Rates_Booking {
         private $pickup_dropoff_default_booking_fields_removed = false;
         private $day_tour_default_booking_fields_removed = false;
         private $joiner_default_booking_fields_removed = false;
+        private $package_deposit_field_removed = false;
 
         public function __construct() {
                 add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
@@ -125,10 +126,12 @@ class Hotel_Rates_Booking {
                 $has_pickup_dropoff = $product_id && $this->get_linked_product_pickup_dropoff_service_id( $product_id );
                 $has_day_tour = $product_id && $this->get_linked_product_day_tour_rate_id( $product_id );
                 $has_joiner = $product_id && $this->get_linked_product_joiner_tour_rate_id( $product_id );
+                $package_deal_id = $product_id ? (int) get_post_meta( $product_id, '_hr_package_deal_id', true ) : 0;
+                $has_package_deal = $package_deal_id && Hotel_Rates_DB::get_package_deal( $package_deal_id );
                 $has_full_custom_booking_form = $has_motorbike_rental || $has_boat_rental || $has_self_drive_rental || $has_port_transfer || $has_destination_tour || $has_pickup_dropoff;
                 $has_compact_tour_booking_form = $has_day_tour || $has_joiner;
 
-                if ( ! $has_full_custom_booking_form && ! $has_compact_tour_booking_form ) {
+                if ( ! $has_full_custom_booking_form && ! $has_compact_tour_booking_form && ! $has_package_deal ) {
                         return;
                 }
 
@@ -152,6 +155,10 @@ class Hotel_Rates_Booking {
                         remove_action( 'tripgo_booking_form', 'tripgo_booking_form_deposit', 20 );
                 }
 
+                if ( $has_package_deal ) {
+                        remove_action( 'tripgo_booking_form', 'tripgo_booking_form_deposit', 20 );
+                }
+
                 $this->motorbike_default_booking_fields_removed = (bool) $has_motorbike_rental;
                 $this->boat_default_booking_fields_removed = (bool) $has_boat_rental;
                 $this->self_drive_default_booking_fields_removed = (bool) $has_self_drive_rental;
@@ -160,13 +167,14 @@ class Hotel_Rates_Booking {
                 $this->pickup_dropoff_default_booking_fields_removed = (bool) $has_pickup_dropoff;
                 $this->day_tour_default_booking_fields_removed = (bool) $has_day_tour;
                 $this->joiner_default_booking_fields_removed = (bool) $has_joiner;
+                $this->package_deposit_field_removed = (bool) $has_package_deal;
         }
 
         public function restore_motorbike_default_booking_fields() {
                 $full_custom_booking_fields_removed = $this->motorbike_default_booking_fields_removed || $this->boat_default_booking_fields_removed || $this->self_drive_default_booking_fields_removed || $this->port_transfer_default_booking_fields_removed || $this->destination_tour_default_booking_fields_removed || $this->pickup_dropoff_default_booking_fields_removed;
                 $compact_tour_booking_fields_removed = $this->day_tour_default_booking_fields_removed || $this->joiner_default_booking_fields_removed;
 
-                if ( ! $full_custom_booking_fields_removed && ! $compact_tour_booking_fields_removed ) {
+                if ( ! $full_custom_booking_fields_removed && ! $compact_tour_booking_fields_removed && ! $this->package_deposit_field_removed ) {
                         return;
                 }
 
@@ -186,6 +194,10 @@ class Hotel_Rates_Booking {
                         add_action( 'tripgo_booking_form', 'tripgo_booking_form_deposit', 20 );
                 }
 
+                if ( $this->package_deposit_field_removed && ! $full_custom_booking_fields_removed && ! $compact_tour_booking_fields_removed ) {
+                        add_action( 'tripgo_booking_form', 'tripgo_booking_form_deposit', 20 );
+                }
+
                 if ( $this->destination_tour_default_booking_fields_removed || $this->pickup_dropoff_default_booking_fields_removed ) {
                         add_action( 'tripgo_booking_form', 'tripgo_booking_form_dates', 5 );
                 }
@@ -198,6 +210,7 @@ class Hotel_Rates_Booking {
                 $this->pickup_dropoff_default_booking_fields_removed = false;
                 $this->day_tour_default_booking_fields_removed = false;
                 $this->joiner_default_booking_fields_removed = false;
+                $this->package_deposit_field_removed = false;
         }
 
         private function get_booking_form_product_id( $args ) {
@@ -442,6 +455,7 @@ class Hotel_Rates_Booking {
                                 <div class="hr-package-booking-selectors"></div>
                                 <div class="hr-package-booking-breakdown" hidden></div>
                                 <p class="hr-package-booking-total"></p>
+                                <?php $this->render_tour_deposit_field( $args ); ?>
 
                                 <input type="hidden" name="hr_package_deal_id" value="<?php echo esc_attr( $package_data['packageId'] ); ?>">
                                 <input type="hidden" name="hr_package_selection_payload" value="">
