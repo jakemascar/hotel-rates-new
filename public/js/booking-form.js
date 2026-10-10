@@ -641,19 +641,56 @@
                 return Math.max(16, Math.ceil(bottom) + 16);
         }
 
-        function getBookingStickyFooterTop() {
-                var footerTop = Infinity;
+        function getBookingStickyContentRoots($card) {
+                var contentSelector = '.content-product-item, .elementor-widget-ovabrw_product_content, .woocommerce-Tabs-panel--description, [data-hr-booking-content]';
+                var $branch = $card;
+                var $roots = $();
 
-                $('.wrap_footer, footer.footer, footer, .elementor-location-footer, [data-elementor-type=footer], #footer, .site-footer').each(function () {
-                        var rect = this.getBoundingClientRect();
-                        var style = window.getComputedStyle(this);
-
-                        if (style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0) {
-                                footerTop = Math.min(footerTop, rect.top);
+                // Find the content beside this booking column before moving the card to body.
+                // This supports Elementor columns, flex containers, and theme layouts.
+                while ($branch.length && !$branch.is('body')) {
+                        $roots = $branch.siblings().filter(function () {
+                                return $(this).is(contentSelector) || $(this).find(contentSelector).length > 0;
+                        });
+                        if ($roots.length) {
+                                return $roots;
                         }
+                        $branch = $branch.parent();
+                }
+
+                return $();
+        }
+
+        function getBookingStickyContentBottom($card) {
+                var $roots = $card.data('hrBookingStickyContentRoots');
+                var bottom = -Infinity;
+                var excluded = '.hr-booking-sticky-placeholder, .ova-forms-product, .elementor-widget-ovabrw_product_related, .elementor-widget-ovabrw_product_reviews, .related, .upsells, footer';
+
+                if (!$roots || !$roots.length) {
+                        return bottom;
+                }
+
+                $roots.each(function () {
+                        var $root = $(this);
+                        // Measure actual content, not a column stretched by the booking card.
+                        var $items = $root.find('.elementor-widget').add($root.filter('.elementor-widget'));
+                        if (!$items.length) {
+                                $items = $root.find('.content-product-item, .woocommerce-Tabs-panel--description, [data-hr-booking-content]')
+                                        .add($root.filter('.content-product-item, .woocommerce-Tabs-panel--description, [data-hr-booking-content]'));
+                        }
+                        $items.each(function () {
+                                if ($(this).closest(excluded).length || $(this).is('.elementor-widget-spacer')) {
+                                        return;
+                                }
+                                var rect = this.getBoundingClientRect();
+                                var style = window.getComputedStyle(this);
+                                if (style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0) {
+                                        bottom = Math.max(bottom, rect.bottom);
+                                }
+                        });
                 });
 
-                return footerTop;
+                return bottom;
         }
 
         function restoreBookingStickyCard($card) {
@@ -685,7 +722,6 @@
                 var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
                 var topOffset = getBookingStickyHeaderOffset();
-                var footerTop = getBookingStickyFooterTop();
                 var boundaryGap = 16;
 
                 $('.hr-booking-sticky-target').each(function () {
@@ -701,8 +737,9 @@
                         var stickyHeight;
                         var stickyTop;
                         var backgroundColor;
+                        var contentBottom = getBookingStickyContentBottom($card);
 
-                        if (!desktop) {
+                        if (!desktop || !Number.isFinite(contentBottom)) {
                                 restoreBookingStickyCard($card);
                                 return;
                         }
@@ -765,9 +802,7 @@
                         );
                         stickyTop = topOffset;
 
-                        if (Number.isFinite(footerTop)) {
-                                stickyTop = Math.min(stickyTop, footerTop - boundaryGap - stickyHeight);
-                        }
+                        stickyTop = Math.min(stickyTop, contentBottom - stickyHeight);
 
                         $card.css({
                                 '--hr-booking-sticky-top': Math.round(stickyTop) + 'px',
@@ -805,6 +840,7 @@
                         $card.before($placeholder);
                         $card
                                 .addClass('hr-booking-sticky-target')
+                                .data('hrBookingStickyContentRoots', getBookingStickyContentRoots($card))
                                 .data('hrBookingStickyPlaceholder', $placeholder);
                         $cards = $cards.add($card);
                 });
@@ -825,6 +861,9 @@
                         bookingStickyResizeObserver = new window.ResizeObserver(scheduleBookingStickyLayout);
                         $cards.each(function () {
                                 bookingStickyResizeObserver.observe(this);
+                                $(this).data('hrBookingStickyContentRoots').each(function () {
+                                        bookingStickyResizeObserver.observe(this);
+                                });
                         });
                 }
 

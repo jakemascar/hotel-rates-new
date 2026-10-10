@@ -419,13 +419,6 @@ class Hotel_Rates_Booking {
                         'portTransferInvalidLabel'    => __( 'This port transfer selection is unavailable.', 'hotel-rates' ),
                 ) );
 
-                wp_enqueue_script(
-                        'hr-booking-sticky-footer-boundary',
-                        HR_PLUGIN_URL . 'public/js/booking-sticky-footer-boundary.js',
-                        array( 'hr-booking' ),
-                        HR_VERSION,
-                        true
-                );
         }
 
         public function render_booking_field( $args ) {

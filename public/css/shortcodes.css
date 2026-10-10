@@ -4,6 +4,20 @@ table.hr-sc-table th {
     color: #fff;
 }
 
+/* Mobile hamburger button that opens the Elementor navigation popup. */
+@media (max-width: 767px) {
+	.elementor .elementor-widget-button .elementor-button[href*="popup"]:has(.e-fas-bars) {
+		background: transparent !important;
+		border: 0 !important;
+		box-shadow: none !important;
+		color: #fff !important;
+	}
+
+	.elementor .elementor-widget-button .elementor-button[href*="popup"] .e-fas-bars {
+		fill: #fff !important;
+	}
+}
+
 .hr-sc-wrap {
 	margin: 1.5em 0;
 	font-family: inherit;
@@ -87,6 +101,13 @@ table.hr-sc-table th {
 
 .hr-specific-tour-rate-table tbody tr:first-child > td:nth-child(-n+2) {
 	background-color: #fff !important;
+}
+
+/* Paint dividers inside cells to avoid collapsed-border repaint issues with rowspan. */
+.hr-specific-tour-rates table.hr-specific-tour-rate-table:not(.hr-specific-tour-rate-table-joiner) tbody tr:not(:last-child) > td.hr-specific-tour-rate-pax,
+.hr-specific-tour-rates table.hr-specific-tour-rate-table:not(.hr-specific-tour-rate-table-joiner) tbody tr:not(:last-child) > td.hr-specific-tour-rate-price {
+	border-bottom: 1px solid #dbe3ee !important;
+	box-shadow: inset 0 -1px 0 #dbe3ee !important;
 }
 
 .hr-specific-tour-package-detail-group ul {

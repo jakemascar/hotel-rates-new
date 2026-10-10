@@ -3,7 +3,7 @@ Contributors: islanddiaries
 Tags: hotel, tours, booking, rentals, rates, travel
 Requires at least: 5.8
 Tested up to: 6.7
-Stable tag: 1.5.225
+Stable tag: 1.5.230
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -72,6 +72,21 @@ Day Tour and Joiner Tour records can include repeatable Details of the Package s
 3. Complete the setup steps above before publishing linked booking products.
 
 == Changelog ==
+
+= 1.5.230 =
+* Remove the mobile hamburger popup button background, border, and shadow while keeping its icon white.
+
+= 1.5.229 =
+* Keep Day Tour rate dividers visible using an inset cell line when collapsed borders disappear during hover repainting.
+
+= 1.5.228 =
+* Restore horizontal dividers between Day Tour guest and price rows, including the first two rates.
+
+= 1.5.227 =
+* Align the floating booking form bottom with the end of the tour or rental content by removing the boundary gap.
+
+= 1.5.226 =
+* Stop desktop floating booking forms at the end of their tour or rental content instead of the site footer.
 
 = 1.5.225 =
 * Added a per-tour setting for the first option in the Destination Tour pick-up add-on dropdown.
