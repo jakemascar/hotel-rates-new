@@ -3,7 +3,7 @@ Contributors: islanddiaries
 Tags: hotel, tours, booking, rentals, rates, travel
 Requires at least: 5.8
 Tested up to: 6.7
-Stable tag: 1.5.230
+Stable tag: 1.5.240
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -72,6 +72,36 @@ Day Tour and Joiner Tour records can include repeatable Details of the Package s
 3. Complete the setup steps above before publishing linked booking products.
 
 == Changelog ==
+
+= 1.5.240 =
+* Adjust mobile Inclusions top padding to 18px and refresh the stylesheet version.
+
+= 1.5.239 =
+* Override page-level zero padding above mobile Inclusions and apply the spacing to both Day Tour and Joiner Tour tables.
+
+= 1.5.238 =
+* Add extra space above Inclusions in mobile Day Tour rate tables.
+
+= 1.5.237 =
+* Lower only the header flag button on 428px portrait iOS screens with a 3x pixel ratio to align with the currency icon.
+
+= 1.5.236 =
+* Revert mobile currency and language alignment overrides to restore the original header positioning.
+
+= 1.5.235 =
+* Reserve mobile header space for the currency control and prevent switcher widgets from shrinking out of view.
+
+= 1.5.234 =
+* Add mobile spacing between package-details groups in Day Tour and Joiner Tour rate tables.
+
+= 1.5.233 =
+* Use the same smaller font size for all mobile Day Tour and Joiner Tour rate-table column headings.
+
+= 1.5.232 =
+* Prevent overlapping mobile Day Tour rate headings with wrapped labels and wider price columns.
+
+= 1.5.231 =
+* Align the mobile header currency and language controls with a centered flex layout instead of separate position offsets.
 
 = 1.5.230 =
 * Remove the mobile hamburger popup button background, border, and shadow while keeping its icon white.

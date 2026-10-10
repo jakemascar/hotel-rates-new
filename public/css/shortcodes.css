@@ -18,6 +18,17 @@ table.hr-sc-table th {
 	}
 }
 
+/* iPhone 14 Plus default portrait viewport: adjust only the header flag button. */
+@media (width: 428px) and (orientation: portrait) and (resolution: 3dppx) and (pointer: coarse) {
+	@supports (-webkit-touch-callout: none) {
+		.elementor .header_sticky .gtranslate_wrapper > a.glink,
+		.elementor .header_sticky .gtranslate_wrapper .gt_switcher > a.glink,
+		.elementor .header_sticky .gtranslate_wrapper .gt_switcher .gt_selected > a {
+			translate: 0 12px;
+		}
+	}
+}
+
 .hr-sc-wrap {
 	margin: 1.5em 0;
 	font-family: inherit;
@@ -167,11 +178,27 @@ table.hr-sc-table th {
 	}
 
 
-	.hr-specific-tour-rate-table thead th {
-		padding: 8px 6px;
-		white-space: normal;
-		line-height: 1.3;
-		overflow-wrap: anywhere;
+	.hr-specific-tour-rates table.hr-specific-tour-rate-table thead th {
+		font-size: 0.92em !important;
+		padding: 8px 6px !important;
+		white-space: normal !important;
+		line-height: 1.3 !important;
+		overflow-wrap: anywhere !important;
+		word-break: normal;
+		height: auto !important;
+		box-sizing: border-box;
+	}
+
+	.hr-specific-tour-rate-table:not(.hr-specific-tour-rate-table-joiner) col.hr-specific-tour-rate-col-pax {
+		width: 18%;
+	}
+
+	.hr-specific-tour-rate-table:not(.hr-specific-tour-rate-table-joiner) col.hr-specific-tour-rate-col-price {
+		width: 24%;
+	}
+
+	.hr-specific-tour-rate-table:not(.hr-specific-tour-rate-table-joiner) col.hr-specific-tour-rate-col-details {
+		width: 58%;
 	}
 
 	.hr-specific-tour-rate-table td.hr-specific-tour-rate-pax,
@@ -188,6 +215,11 @@ table.hr-sc-table th {
 		overflow-wrap: anywhere;
 	}
 
+	.hr-specific-tour-rates table.hr-specific-tour-rate-table td.hr-specific-tour-package-details,
+	.tour-plan-description .hr-specific-tour-rates table.hr-specific-tour-rate-table > tbody > tr:first-child > td.hr-specific-tour-package-details {
+		padding-top: 18px !important;
+	}
+
 	.hr-specific-tour-rate-table-joiner col.hr-specific-tour-rate-col-price {
 		width: 34%;
 	}
@@ -202,6 +234,10 @@ table.hr-sc-table th {
 
 	.hr-specific-tour-rate-table .hr-specific-tour-mobile-child-discount {
 		display: table-row;
+	}
+
+	.hr-specific-tour-rate-table .hr-specific-tour-package-detail-group + .hr-specific-tour-package-detail-group {
+		margin-top: 16px;
 	}
 
 	.hr-specific-tour-rate-table .hr-specific-tour-package-detail-group h4 {
