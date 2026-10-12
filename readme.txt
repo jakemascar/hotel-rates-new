@@ -3,7 +3,7 @@ Contributors: islanddiaries
 Tags: hotel, tours, booking, rentals, rates, travel
 Requires at least: 5.8
 Tested up to: 6.7
-Stable tag: 1.5.240
+Stable tag: 1.5.241
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -31,6 +31,8 @@ Rates are entered in Philippine pesos (PHP). If YayCurrency is available, the pl
 * Pick-up & Drop-off: Set locations, route rates, pickup times, passenger details, and add-ons.
 
 The plugin also adds nationality, Phone / WhatsApp, and an optional special request to the WooCommerce checkout. Booking selections appear in cart and order details.
+
+Set the global booking convenience fee under Hotel Rates > Set Convenience Fee (the last submenu). The default is 2%; enter 0 to disable. The fee applies to booking line amounts after discounts, excluding shipping, taxes, and other checkout fees. It is hidden from booking forms and appears as "Plus 2% Convenience Fee" (using the configured percentage) in checkout and order totals. Completed orders retain their original fee.
 
 == Setup and Product Links ==
 
@@ -72,6 +74,9 @@ Day Tour and Joiner Tour records can include repeatable Details of the Package s
 3. Complete the setup steps above before publishing linked booking products.
 
 == Changelog ==
+
+= 1.5.241 =
+* Add Set Convenience Fee settings with a default 2% global booking fee shown at checkout and saved on orders.
 
 = 1.5.240 =
 * Adjust mobile Inclusions top padding to 18px and refresh the stylesheet version.
