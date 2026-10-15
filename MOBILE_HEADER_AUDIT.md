@@ -1,3 +1,47 @@
+## Rollback - 15 October 2026
+
+The mobile icon-alignment override was removed from `public/css/shortcodes.css` at the user's request. The real iPhone 14 Plus issue remains unresolved; the earlier engine-test results below are historical, not confirmation of a device fix. Keep these findings for a different approach.
+
+The removed override reset the language wrapper's positioning, used flex for the flag link, fixed its image to 24x24, and removed its text/arrow spans from layout. The hamburger styling and rate-table styling remain unchanged. No older iPhone translate/offset workaround was restored.
+
+Previously observed live-site rules include `.gtranslate_wrapper { right: 10px; top: 0; position: relative; }` and mobile `left: 28px`, emitted in an unnamed inline style block. The exact WordPress editor/snippet source remains unverified. Currency positioning also used legacy offsets and negative margins. Inspect those original sources and both controls' actual layout before the next fix.
+
+Removed CSS for reference only:
+
+```css
+/* Keep the mobile header flag clear of legacy offsets and label spans. */
+@media (max-width: 767px) {
+	.elementor-23001 .header_sticky .gtranslate_wrapper {
+		display: flex;
+		align-items: center;
+		position: static;
+		left: auto;
+		right: auto;
+		top: auto;
+	}
+
+	.elementor-23001 .header_sticky .gtranslate_wrapper > a.gt_switcher-popup {
+		display: inline-flex;
+		align-items: center;
+		vertical-align: middle;
+		white-space: nowrap;
+		line-height: 1;
+		translate: none;
+	}
+
+	.elementor-23001 .header_sticky .gtranslate_wrapper > a.gt_switcher-popup > img {
+		display: block;
+		flex-shrink: 0;
+		width: 24px;
+		height: 24px;
+	}
+
+	.elementor-23001 .header_sticky .gtranslate_wrapper > a.gt_switcher-popup > span {
+		display: none;
+	}
+}
+```
+
 # Mobile header investigation — 12 October 2026
 
 ## Result and root cause

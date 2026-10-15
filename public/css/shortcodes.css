@@ -18,38 +18,6 @@ table.hr-sc-table th {
 	}
 }
 
-/* Keep the mobile header flag clear of legacy offsets and label spans. */
-@media (max-width: 767px) {
-	.elementor-23001 .header_sticky .gtranslate_wrapper {
-		display: flex;
-		align-items: center;
-		position: static;
-		left: auto;
-		right: auto;
-		top: auto;
-	}
-
-	.elementor-23001 .header_sticky .gtranslate_wrapper > a.gt_switcher-popup {
-		display: inline-flex;
-		align-items: center;
-		vertical-align: middle;
-		white-space: nowrap;
-		line-height: 1;
-		translate: none;
-	}
-
-	.elementor-23001 .header_sticky .gtranslate_wrapper > a.gt_switcher-popup > img {
-		display: block;
-		flex-shrink: 0;
-		width: 24px;
-		height: 24px;
-	}
-
-	.elementor-23001 .header_sticky .gtranslate_wrapper > a.gt_switcher-popup > span {
-		display: none;
-	}
-}
-
 .hr-sc-wrap {
 	margin: 1.5em 0;
 	font-family: inherit;
