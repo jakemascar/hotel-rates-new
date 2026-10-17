@@ -1,0 +1,47 @@
+/* Active only after both switchers render in the default portrait iPhone viewport. */
+@media (width: 428px) and (orientation: portrait) and (resolution: 3dppx) and (pointer: coarse) {
+    .elementor-23001 .header_sticky .hr-iphone-header-controls {
+        align-items: center !important;
+    }
+
+    .elementor-23001 .hr-iphone-header-controls .yay-currency-single-page-switcher {
+        inset: auto !important;
+        margin: 0 !important;
+    }
+
+    .elementor-23001 .hr-iphone-header-controls .yay-currency-custom-select {
+        margin: 0 !important;
+    }
+
+    .elementor-23001 .hr-iphone-header-controls .gtranslate_wrapper {
+        position: relative !important;
+        inset: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .elementor-23001 .hr-iphone-header-controls .gtranslate_wrapper > a.gt_switcher-popup {
+        display: inline-flex !important;
+        align-items: center !important;
+        width: 24px !important;
+        height: 24px !important;
+        line-height: 1 !important;
+        white-space: nowrap !important;
+        translate: none !important;
+    }
+
+    .elementor-23001 .hr-iphone-header-controls .gtranslate_wrapper > a.gt_switcher-popup > span {
+        display: none !important;
+    }
+
+    .elementor-23001 .hr-iphone-header-controls .gtranslate_wrapper > a.gt_switcher-popup > img {
+        display: block !important;
+        flex-shrink: 0;
+        width: 24px !important;
+        height: 24px !important;
+        max-width: none !important;
+        box-sizing: border-box;
+    }
+}

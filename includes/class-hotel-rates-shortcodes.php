@@ -244,6 +244,20 @@ class Hotel_Rates_Shortcodes {
         }
 
         public function enqueue_styles() {
+                // Separate assets keep the header adjustment independent of rate tables.
+                wp_enqueue_style(
+                        'hr-mobile-header',
+                        HR_PLUGIN_URL . 'public/css/mobile-header.css',
+                        array(),
+                        (string) filemtime( HR_PLUGIN_DIR . 'public/css/mobile-header.css' )
+                );
+                wp_enqueue_script(
+                        'hr-mobile-header',
+                        HR_PLUGIN_URL . 'public/js/mobile-header.js',
+                        array(),
+                        (string) filemtime( HR_PLUGIN_DIR . 'public/js/mobile-header.js' ),
+                        true
+                );
                 wp_enqueue_style(
                         'hr-shortcodes',
                         HR_PLUGIN_URL . 'public/css/shortcodes.css',

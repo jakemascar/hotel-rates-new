@@ -1,3 +1,13 @@
+## Scoped JavaScript/CSS approach - 15 October 2026
+
+Added `public/js/mobile-header.js` and `public/css/mobile-header.css`, enqueued by the shortcode class with file modification timestamps for asset cache versions. The script opts the existing header tools row into styling only when both switchers exist, the user agent identifies an iPhone, and the viewport matches 428px portrait, 3dppx, coarse pointer. It responds to viewport changes, delayed rendering, header replacement, and page restoration. It does not detect the exact hardware model or browser zoom setting; other iPhones matching these characteristics also qualify. Default zoom is the intended target.
+
+The scoped CSS resets currency wrapper offsets and custom-select margins, resets language offsets, hides direct language label/arrow spans, and sizes the flag to 24x24. Existing nodes and event handlers are preserved. No blanket style reset or native currency-form display override is used.
+
+Validation: JavaScript syntax and Git diff checks passed. Injected the local assets into an isolated Playwright WebKit session against the live homepage. At 428px, currency and flag centers both measured 42.5px vertically; the flag was 24x24 and the language popup opened. The opt-in class was absent at 390, 414, 430, and 768px and returned on resizing to 428px. These are emulated browser checks, not physical iPhone confirmation. Live header styling has changed since the earlier audit (currency now measures 30x30), so historical geometry below should not be treated as current.
+
+Upload both new assets and the changed shortcode PHP class together, then purge page/optimization caches. Physical iPhone and currency-selection verification remain required.
+
 ## Rollback - 15 October 2026
 
 The mobile icon-alignment override was removed from `public/css/shortcodes.css` at the user's request. The real iPhone 14 Plus issue remains unresolved; the earlier engine-test results below are historical, not confirmation of a device fix. Keep these findings for a different approach.
