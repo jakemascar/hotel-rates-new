@@ -65,7 +65,7 @@ class Hotel_Rates_Convenience_Fee {
                 $percent = $this->get_percent();
                 if ( $percent <= 0 ) { return; }
                 $base = 0;
-                $booking_keys = array( 'hr_selected_rate_id', 'hr_tour_rate_id', 'hr_airport_transfer_rate_id', 'hr_package_deal_id', 'hr_motorbike_rental_id', 'hr_boat_rental_id', 'hr_self_drive_rental_id', 'hr_port_transfer_id', 'hr_destination_tour_id', 'hr_pickup_dropoff_service_id' );
+                $booking_keys = array( 'hr_selected_rate_id', 'hr_tour_rate_id', 'hr_airport_transfer_rate_id', 'hr_package_deal_id', 'hr_motorbike_rental_id', 'hr_boat_rental_id', 'hr_self_drive_rental_id', 'hr_port_transfer_id', 'hr_destination_tour_id', 'hr_pickup_dropoff_service_id', 'hr_oceanjet_id' );
                 foreach ( $cart->get_cart() as $line ) {
                         foreach ( $booking_keys as $key ) {
                                 if ( ! empty( $line[ $key ] ) ) {

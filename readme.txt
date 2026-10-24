@@ -3,7 +3,7 @@ Contributors: islanddiaries
 Tags: hotel, tours, booking, rentals, rates, travel
 Requires at least: 5.8
 Tested up to: 6.7
-Stable tag: 1.5.241
+Stable tag: 1.5.242
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -43,6 +43,14 @@ Set the global booking convenience fee under Hotel Rates > Set Convenience Fee (
 
 The Hotel Rates and Tour Rates screens use the registered region and place hierarchy. Package Deal records are managed from the Register page; the other rental and service records have their own submenu pages.
 
+== OceanJet Booking Requests ==
+
+Open Hotel Rates > OceanJet to configure sailing records and fares, then save to create the hidden WooCommerce booking product. Place [oceanjet_booking] in an Elementor Shortcode widget. One-way and round-trip requests use accommodation and schedule selection, passenger/contact details, review, then the existing WooCommerce checkout. All sailing times and age checks use Philippine travel dates.
+
+Sailings and fares are entered manually, not synchronized with OceanJet. Staff must confirm supplier availability, verify discounted IDs, secure tickets, and enter supplier references in the WooCommerce order's OceanJet ticket fulfilment section. Payment alone does not issue a ferry ticket. This version does not reserve live seats, upload IDs, attach tickets, or automate supplier refunds/rebooking.
+
+See OCEANJET_SETUP.md for setup, fee behavior, and validation instructions.
+
 == Rate Display Shortcodes ==
 
 These shortcodes display rate tables or itinerary content. On a product page, the specific-record shortcodes use that product's linked record unless an ID is supplied. The booking form itself comes from the linked product and Tripgo integration.
@@ -74,6 +82,11 @@ Day Tour and Joiner Tour records can include repeatable Details of the Package s
 3. Complete the setup steps above before publishing linked booking products.
 
 == Changelog ==
+
+= 1.5.242 =
+* Add admin-managed OceanJet booking requests with sailing/accommodation fares, passenger validation, review, WooCommerce checkout, and manual ticket references.
+* Include OceanJet bookings in the global convenience fee.
+
 
 = 1.5.241 =
 * Add Set Convenience Fee settings with a default 2% global booking fee shown at checkout and saved on orders.
