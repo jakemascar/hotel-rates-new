@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 class Hotel_Rates_Oceanjet {
     const OPTION = 'hr_oceanjet_settings';
-    const CATEGORIES = array( 'adult' => 'Adult', 'minor' => 'Minor', 'infant' => 'Infant', 'student' => 'Student', 'pwd' => 'PWD', 'senior' => 'Senior Citizen' );
+    const CATEGORIES = array( 'adult' => 'Adult', 'child' => 'Child' );
     private $adding = false;
 
     public function __construct() {
@@ -26,7 +26,128 @@ class Hotel_Rates_Oceanjet {
     }
 
     public function settings() {
-        return wp_parse_args( get_option( self::OPTION, array() ), array( 'product_id' => 0, 'cutoff' => 120, 'max_pax' => 10, 'infant_max' => 5, 'minor_max' => 11, 'senior_min' => 60, 'ticket_fee' => '0', 'sailings' => array() ) );
+        $settings = wp_parse_args( get_option( self::OPTION, array() ), array( 'product_id' => 0, 'cutoff' => 120, 'max_pax' => 10, 'ticket_fee' => '0', 'sailings' => array() ) );
+        if ( isset( $settings['groups'] ) ) { $settings['sailings'] = $this->expand_groups( $settings['groups'] ); }
+        // Read legacy schedules without changing their IDs or historical orders.
+        foreach ( $settings['sailings'] as &$row ) {
+            if ( ! array_key_exists( 'child', $row['fares'] ) ) { $row['fares']['child'] = $row['fares']['minor'] ?? null; }
+            $row += array( 'from_code' => '', 'to_code' => '' );
+        }
+        unset( $row );
+        return $settings;
+    }
+    public static function direction_defaults() {
+        return array( 'active'=>true, 'code'=>'', 'duration'=>60, 'days'=>array('1','2','3','4','5','6','7'), 'blocked'=>'', 'times'=>array(), 'accommodations'=>array() );
+    }
+    public function route_groups() {
+        $settings = $this->settings();
+        if ( isset( $settings['groups'] ) ) { return $settings['groups']; }
+        $groups = array();
+        foreach ( $settings['sailings'] as $row ) {
+            $ports = array( $row['from'], $row['to'] ); sort( $ports, SORT_STRING ); $key = wp_json_encode( $ports );
+            if ( ! isset( $groups[ $key ] ) ) {
+                $groups[ $key ] = array( 'id'=>'', 'from'=>$row['from'], 'to'=>$row['to'], 'from_code'=>$row['from_code'], 'to_code'=>$row['to_code'], 'directions'=>array() );
+            }
+            $direction = $row['from'] === $groups[ $key ]['from'] ? 'a' : 'b';
+            if ( ! isset( $groups[ $key ]['directions'][ $direction ] ) ) {
+                $groups[ $key ]['directions'][ $direction ] = array_intersect_key( $row, self::direction_defaults() ) + self::direction_defaults();
+            }
+            $data = &$groups[ $key ]['directions'][ $direction ];
+            if ( ! in_array( $row['time'], $data['times'], true ) ) { $data['times'][] = $row['time']; }
+            $class_key = strtolower( $row['class'] );
+            if ( ! isset( $data['accommodations'][ $class_key ] ) ) {
+                $data['accommodations'][ $class_key ] = array( 'id'=>'', 'name'=>$row['class'], 'fares'=>array_intersect_key( $row['fares'], self::CATEGORIES ) );
+            }
+            unset( $data );
+        }
+        foreach ( $groups as &$group ) {
+            foreach ( array('a','b') as $direction ) {
+                if ( ! isset( $group['directions'][ $direction ] ) ) { $group['directions'][ $direction ] = self::direction_defaults(); }
+                $group['directions'][ $direction ]['accommodations'] = array_values( $group['directions'][ $direction ]['accommodations'] );
+                sort( $group['directions'][ $direction ]['times'] );
+            }
+        }
+        unset( $group );
+        return array_values( $groups );
+    }
+    // Expand the shared direction settings into the same server-side sailing contract
+    // consumed by search, quotes, cart validation and order creation.
+    public function expand_groups( $groups ) {
+        $records = array();
+        foreach ( $groups as $group ) {
+            foreach ( array('a','b') as $key ) {
+                $direction = $group['directions'][ $key ]; $reverse = 'b' === $key;
+                foreach ( $direction['times'] as $time ) {
+                    foreach ( $direction['accommodations'] as $accommodation ) {
+                        $id = hash( 'sha256', wp_json_encode( array( $group['id'], $key, $accommodation['id'], $time ) ) );
+                        $records[ $id ] = array(
+                            'id'=>$id, 'active'=>$direction['active'],
+                            'from'=>$group[ $reverse ? 'to' : 'from' ], 'to'=>$group[ $reverse ? 'from' : 'to' ],
+                            'from_code'=>$group[ $reverse ? 'to_code' : 'from_code' ], 'to_code'=>$group[ $reverse ? 'from_code' : 'to_code' ],
+                            'time'=>$time, 'duration'=>$direction['duration'], 'code'=>$direction['code'],
+                            'class'=>$accommodation['name'], 'fares'=>$accommodation['fares'],
+                            'days'=>$direction['days'], 'blocked'=>$direction['blocked'], 'start'=>'', 'end'=>'',
+                        );
+                    }
+                }
+            }
+        }
+        return $records;
+    }
+    public function normalize_groups( $input ) {
+        if ( ! is_array( $input ) || count( $input ) > 50 ) { throw new RuntimeException( 'Maximum 50 route groups.' ); }
+        $groups = array(); $seen = array(); $combinations = 0; $ids = array();
+        foreach ( $input as $group ) {
+            if ( ! is_array( $group ) ) { throw new RuntimeException( 'Invalid route group.' ); }
+            $out = array();
+            foreach ( array('from','to','from_code','to_code') as $key ) { $out[ $key ] = sanitize_text_field( $group[ $key ] ?? '' ); }
+            if ( ! $out['from'] || ! $out['to'] || 0 === strcasecmp( $out['from'], $out['to'] ) ) { throw new RuntimeException( 'Each route group needs two distinct ports.' ); }
+            $ports = array(strtolower($out['from']),strtolower($out['to'])); sort($ports); $pair = wp_json_encode($ports);
+            if ( isset( $seen[ $pair ] ) ) { throw new RuntimeException( 'Combine both directions into one route group per port pair.' ); }
+            $seen[ $pair ] = true;
+            $out['id'] = sanitize_key( $group['id'] ?? '' ) ?: wp_generate_uuid4();
+            if ( isset( $ids[ $out['id'] ] ) ) { throw new RuntimeException( 'Duplicate route group ID.' ); } $ids[ $out['id'] ] = true;
+            if ( ! is_array( $group['directions'] ?? null ) || count( $group['directions'] ) !== 2 ) { throw new RuntimeException( 'Each route group requires sections A and B.' ); }
+            foreach ( array('a','b') as $key ) {
+                $row = $group['directions'][ $key ] ?? null;
+                if ( ! is_array( $row ) ) { throw new RuntimeException( 'Each route group requires sections A and B.' ); }
+                $direction = array( 'active'=>!empty($row['active']), 'code'=>sanitize_text_field($row['code'] ?? ''), 'duration'=>$this->integer($row['duration'] ?? 60,1,900) );
+                if ( ! $direction['code'] ) { throw new RuntimeException( 'Enter a shared trip code for each direction.' ); }
+                $direction['days'] = array_values(array_unique(array_intersect(array_map('strval',(array)($row['days'] ?? array())),array('1','2','3','4','5','6','7'))));
+                if ( ! $direction['days'] ) { throw new RuntimeException( 'Select at least one operating weekday for each direction.' ); }
+                $direction['blocked'] = sanitize_text_field($row['blocked'] ?? '');
+                foreach ( array_filter(array_map('trim',explode(',',$direction['blocked']))) as $date ) { if ( ! self::date($date) ) { throw new RuntimeException( 'Blocked dates must be comma-separated YYYY-MM-DD values.' ); } }
+                $times = $row['times'] ?? array();
+                if ( ! is_array($times) || ! $times || count($times)>30 ) { throw new RuntimeException( 'Enter 1 to 30 departure times for each direction.' ); }
+                $direction['times'] = array();
+                foreach ( $times as $time ) {
+                    if ( ! is_string($time) || ! preg_match('/^([01]\d|2[0-3]):[0-5]\d$/',$time) ) { throw new RuntimeException( 'Enter valid departure times.' ); }
+                    if ( in_array($time,$direction['times'],true) ) { throw new RuntimeException( 'Duplicate departure time in one direction.' ); }
+                    $direction['times'][]=$time;
+                }
+                sort($direction['times']);
+                $accommodations = $row['accommodations'] ?? array();
+                if ( ! is_array($accommodations) || ! $accommodations || count($accommodations)>20 ) { throw new RuntimeException( 'Enter 1 to 20 accommodations for each direction.' ); }
+                $direction['accommodations']=array(); $names=array(); $accommodation_ids=array();
+                foreach ( $accommodations as $accommodation ) {
+                    if ( ! is_array($accommodation) ) { throw new RuntimeException('Invalid accommodation.'); }
+                    $name=sanitize_text_field($accommodation['name'] ?? '');
+                    if ( ! $name || isset($names[strtolower($name)]) ) { throw new RuntimeException('Enter unique accommodation names in each direction.'); } $names[strtolower($name)]=true;
+                    $entry=array('id'=>sanitize_key($accommodation['id'] ?? '') ?: wp_generate_uuid4(), 'name'=>$name, 'fares'=>array());
+                    if ( isset($accommodation_ids[$entry['id']]) ) { throw new RuntimeException('Duplicate accommodation ID.'); } $accommodation_ids[$entry['id']]=true;
+                    foreach ( self::CATEGORIES as $category=>$label ) {
+                        if ( ! isset($accommodation['fares'][$category]) || '' === $accommodation['fares'][$category] ) { throw new RuntimeException('Enter both Adult and Child fares for every accommodation. Zero means free.'); }
+                        $entry['fares'][$category]=self::money($accommodation['fares'][$category]);
+                    }
+                    $direction['accommodations'][]=$entry;
+                }
+                $combinations+=count($direction['times'])*count($direction['accommodations']);
+                if ( $combinations>1000 ) { throw new RuntimeException('Maximum 1000 departure/accommodation combinations across route groups.'); }
+                $out['directions'][$key]=$direction;
+            }
+            $groups[]=$out;
+        }
+        return $groups;
     }
     public function menu() {
         add_submenu_page( 'hotel-rates', 'OceanJet', 'OceanJet', 'manage_options', 'hr-oceanjet', array( $this, 'admin_page' ) );
@@ -70,39 +191,9 @@ class Hotel_Rates_Oceanjet {
                 'product_id' => (int) $old['product_id'],
                 'cutoff' => $this->integer( $input['cutoff'] ?? 120, 0, 10080 ),
                 'max_pax' => $this->integer( $input['max_pax'] ?? 10, 1, 30 ),
-                'infant_max' => $this->integer( $input['infant_max'] ?? 5, 0, 10 ),
-                'minor_max' => $this->integer( $input['minor_max'] ?? 11, 2, 17 ),
-                'senior_min' => $this->integer( $input['senior_min'] ?? 60, 18, 100 ),
                 'ticket_fee' => number_format( self::money( $input['ticket_fee'] ?? '0' ) / 100, 2, '.', '' ),
-                'sailings' => array(),
             );
-            $records = $input['sailings'] ?? array();
-            if ( ! is_array( $records ) || count( $records ) > 200 ) { throw new RuntimeException( 'Maximum 200 sailing records.' ); }
-            foreach ( $records as $row ) {
-                if ( ! is_array( $row ) ) { throw new RuntimeException( 'Invalid sailing.' ); }
-                $clean = array();
-                foreach ( array( 'from', 'to', 'code', 'class', 'time', 'start', 'end', 'blocked' ) as $key ) { $clean[ $key ] = sanitize_text_field( $row[ $key ] ?? '' ); }
-                if ( ! $clean['from'] || ! $clean['to'] || ! $clean['code'] || ! $clean['class'] || strcasecmp( $clean['from'], $clean['to'] ) === 0 ) { throw new RuntimeException( 'Every sailing needs distinct ports, a trip code, and an accommodation.' ); }
-                if ( ! preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', $clean['time'] ) || ! self::valid_operating_dates( $clean['start'], $clean['end'] ) ) { throw new RuntimeException( 'Check sailing times and effective dates.' ); }
-                $clean['duration'] = $this->integer( $row['duration'] ?? 60, 1, 2880 );
-                $clean['days'] = array_values( array_intersect( array_map( 'strval', (array) ( $row['days'] ?? array() ) ), array( '1', '2', '3', '4', '5', '6', '7' ) ) );
-                if ( ! $clean['days'] ) { throw new RuntimeException( 'Select at least one operating weekday.' ); }
-                foreach ( array_filter( array_map( 'trim', explode( ',', $clean['blocked'] ) ) ) as $blocked ) { if ( ! self::date( $blocked ) ) { throw new RuntimeException( 'Blocked dates must be comma-separated YYYY-MM-DD values.' ); } }
-                $clean['active'] = ! empty( $row['active'] );
-                $id = sanitize_key( $row['id'] ?? '' );
-                $clean['id'] = $id && isset( $old['sailings'][ $id ] ) ? $id : wp_generate_uuid4();
-                foreach ( self::CATEGORIES as $key => $label ) {
-                    $value = $row['fares'][ $key ] ?? '';
-                    $clean['fares'][ $key ] = '' === $value ? null : self::money( $value );
-                }
-                if ( null === $clean['fares']['adult'] ) { throw new RuntimeException( 'Adult fare is required. Blank other fares disable those categories for this sailing.' ); }
-                foreach ( $out['sailings'] as $existing ) {
-                    if ( $clean['active'] && $existing['active'] && $existing['from'] === $clean['from'] && $existing['to'] === $clean['to'] && $existing['class'] === $clean['class'] && $existing['time'] === $clean['time'] && self::operating_dates_overlap( $existing, $clean ) && array_intersect( $existing['days'], $clean['days'] ) ) {
-                        throw new RuntimeException( 'Overlapping records for the same route, time and accommodation. Use separate effective date ranges.' );
-                    }
-                }
-                $out['sailings'][ $clean['id'] ] = $clean;
-            }
+            $out['groups'] = $this->normalize_groups( $input['groups'] ?? array() );
             $product = wc_get_product( $out['product_id'] );
             if ( ! $product ) {
                 $product = new WC_Product_Simple();
@@ -131,7 +222,7 @@ class Hotel_Rates_Oceanjet {
         foreach ( $settings['sailings'] as $sailing ) { if ( $sailing['active'] ) { $routes[ $sailing['from'] ][] = $sailing['to']; } }
         foreach ( $routes as &$destinations ) { $destinations = array_values( array_unique( $destinations ) ); sort( $destinations ); } unset( $destinations );
         ksort( $routes );
-        wp_localize_script( 'hr-oceanjet', 'hrOceanjet', array( 'url' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( 'hr_oceanjet' ), 'routes' => $routes, 'categories' => self::CATEGORIES, 'max' => $settings['max_pax'], 'infantMax' => $settings['infant_max'], 'minorMax' => $settings['minor_max'], 'seniorMin' => $settings['senior_min'], 'today' => ( new DateTimeImmutable( 'now', new DateTimeZone( 'Asia/Manila' ) ) )->format( 'Y-m-d' ) ) );
+        wp_localize_script( 'hr-oceanjet', 'hrOceanjet', array( 'url' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( 'hr_oceanjet' ), 'routes' => $routes, 'categories' => self::CATEGORIES, 'max' => $settings['max_pax'], 'ticketFee' => self::money( $settings['ticket_fee'] ), 'today' => ( new DateTimeImmutable( 'now', new DateTimeZone( 'Asia/Manila' ) ) )->format( 'Y-m-d' ) ) );
         ob_start();
         include HR_PLUGIN_DIR . 'public/views/oceanjet.php';
         return ob_get_clean();
@@ -143,19 +234,24 @@ class Hotel_Rates_Oceanjet {
         if ( $out['return'] && ( ! self::date( $out['return'] ) || $out['return'] < $out['date'] ) ) { throw new RuntimeException( 'Return date must be on or after departure.' ); }
         $total = 0;
         foreach ( self::CATEGORIES as $key => $label ) {
-            $count = $this->integer( $input['counts'][ $key ] ?? 0, 0, 'infant' === $key ? $s['infant_max'] : $s['max_pax'] );
+            $count = $this->integer( $input['counts'][ $key ] ?? 0, 0, $s['max_pax'] );
             $out['counts'][ $key ] = $count;
-            if ( 'infant' !== $key ) { $total += $count; }
+            $total += $count;
         }
-        if ( $total < 1 || $total > $s['max_pax'] || array_sum( array_intersect_key( $out['counts'], array_flip( array( 'adult', 'student', 'pwd', 'senior' ) ) ) ) < 1 ) { throw new RuntimeException( 'Select at least one adult-age passenger and stay within the passenger limit.' ); }
+        foreach ( (array) ( $input['counts'] ?? array() ) as $key => $count ) {
+            if ( ! isset( self::CATEGORIES[ $key ] ) && $count ) { throw new RuntimeException( 'Passenger categories changed. Please submit a new OceanJet booking.' ); }
+        }
+        if ( $total < 1 || $total > $s['max_pax'] ) { throw new RuntimeException( 'Enter at least one passenger and stay within the passenger limit.' ); }
+        if ( isset( $input['type'] ) && ( ! in_array( $input['type'], array( 'one', 'round' ), true ) || ( 'round' === $input['type'] && ! $out['return'] ) || ( 'one' === $input['type'] && $out['return'] ) ) ) { throw new RuntimeException( 'Check trip type and return date.' ); }
         return $out;
     }
     public function available( $row, $date, $from, $to ) {
         $day = self::date( $date );
         if ( ! $day || ! $row['active'] || $row['from'] !== $from || $row['to'] !== $to || ( '' !== $row['start'] && $date < $row['start'] ) || ( '' !== $row['end'] && $date > $row['end'] ) || ! in_array( $day->format( 'N' ), $row['days'], true ) || in_array( $date, array_map( 'trim', explode( ',', $row['blocked'] ) ), true ) ) { return false; }
         $depart = new DateTimeImmutable( $date . ' ' . $row['time'], new DateTimeZone( 'Asia/Manila' ) );
-        $settings = $this->settings();
-        return $depart->getTimestamp() > time() + 60 * (int) $settings['cutoff'];
+        // Do not expand all accommodations/times for each candidate sailing.
+        $settings = get_option( self::OPTION, array() );
+        return $depart->getTimestamp() > time() + 60 * (int) ( $settings['cutoff'] ?? 120 );
     }
     private function leg( $row, $date, $counts ) {
         $amount = 0; $breakdown = array();
@@ -166,7 +262,7 @@ class Hotel_Rates_Oceanjet {
             $breakdown[] = self::CATEGORIES[ $key ] . ' x ' . $count . ' @ PHP ' . number_format( $row['fares'][ $key ] / 100, 2 );
         }
         $departure = new DateTimeImmutable( $date . ' ' . $row['time'], new DateTimeZone( 'Asia/Manila' ) );
-        return array( 'id' => $row['id'], 'from' => $row['from'], 'to' => $row['to'], 'date' => $date, 'time' => $row['time'], 'arrival' => $departure->modify( '+' . $row['duration'] . ' minutes' )->format( 'Y-m-d H:i' ), 'class' => $row['class'], 'code' => $row['code'], 'cents' => $amount, 'breakdown' => $breakdown );
+        return array( 'id' => $row['id'], 'from' => $row['from'], 'to' => $row['to'], 'date' => $date, 'time' => $row['time'], 'arrival' => $departure->modify( '+' . $row['duration'] . ' minutes' )->format( 'Y-m-d H:i' ), 'class' => $row['class'], 'code' => $row['code'], 'cents' => $amount, 'fares' => array_intersect_key( $row['fares'], self::CATEGORIES ), 'from_code' => $row['from_code'], 'to_code' => $row['to_code'], 'duration' => $row['duration'], 'breakdown' => $breakdown );
     }
     public function quote( $input ) {
         $search = $this->normalize_search( $input ); $settings = $this->settings(); $legs = array();
@@ -183,34 +279,24 @@ class Hotel_Rates_Oceanjet {
         return array( 'search' => $search, 'legs' => $legs, 'ticket_fee' => $fee, 'cents' => $total, 'signature' => hash( 'sha256', wp_json_encode( array( $legs, $fee ) ) ) );
     }
     public function passengers( $input, $quote ) {
-        $settings = $this->settings(); $people = $input['passengers'] ?? array(); $clean = array(); $expected = array();
-        foreach ( $quote['search']['counts'] as $key => $count ) { for ( $i = 0; $i < $count; $i++ ) { $expected[] = $key; } }
-        if ( ! is_array( $people ) || count( $people ) !== count( $expected ) ) { throw new RuntimeException( 'Complete details for every passenger.' ); }
-        foreach ( array_values( $people ) as $i => $person ) {
-            $row = array( 'category' => $expected[ $i ] );
-            foreach ( array( 'first', 'last', 'middle', 'phone', 'nationality', 'sex', 'dob' ) as $key ) {
-                $row[ $key ] = sanitize_text_field( $person[ $key ] ?? '' );
-                if ( strlen( $row[ $key ] ) > 150 ) { throw new RuntimeException( 'A passenger field is too long.' ); }
-            }
-            $row['email'] = sanitize_email( $person['email'] ?? '' );
-            if ( ! $row['first'] || ! $row['last'] || ! $row['nationality'] || ! in_array( $row['sex'], array( 'Male', 'Female' ), true ) || ! self::date( $row['dob'] ) || ( ! empty( $person['email'] ) && ! is_email( $row['email'] ) ) ) { throw new RuntimeException( 'Check each passenger name, birth date, sex, nationality, and email.' ); }
-            if ( ! in_array( $row['category'], array( 'minor', 'infant' ), true ) && ! preg_match( '/^[+()\d\s.-]{6,30}$/', $row['phone'] ) ) { throw new RuntimeException( 'Enter a valid contact number for each adult-age passenger.' ); }
-            foreach ( $quote['legs'] as $leg ) {
-                $dob = self::date( $row['dob'] ); $travel = self::date( $leg['date'] ); $age = $dob->diff( $travel )->y;
-                $cat = $row['category'];
-                if ( $dob > $travel || $age > 120 || ( 'infant' === $cat && $age >= 2 ) || ( 'minor' === $cat && ( $age < 2 || $age > $settings['minor_max'] ) ) || ( ! in_array( $cat, array( 'infant', 'minor' ), true ) && $age <= $settings['minor_max'] ) || ( 'senior' === $cat && $age < $settings['senior_min'] ) ) { throw new RuntimeException( 'Passenger age does not match the selected category on every travel date.' ); }
-            }
-            if ( in_array( $row['category'], array( 'student', 'pwd', 'senior' ), true ) && ! in_array( strtolower( $row['nationality'] ), array( 'filipino', 'philippines', 'philippine' ), true ) ) { throw new RuntimeException( 'Student, PWD and senior fares require Filipino nationality and staff ID verification.' ); }
-            $clean[] = $row;
+        $people = $input['passengers'] ?? array();
+        if ( ! is_array( $people ) || count( $people ) !== 1 || ! is_array( reset( $people ) ) ) { throw new RuntimeException( 'Enter details for one passenger. Staff will collect the remaining details.' ); }
+        $person = reset( $people ); $row = array( 'category' => $quote['search']['counts']['adult'] ? 'adult' : 'child' );
+        foreach ( array( 'first', 'last', 'middle', 'phone', 'nationality', 'sex', 'dob' ) as $key ) {
+            $row[ $key ] = sanitize_text_field( $person[ $key ] ?? '' );
+            if ( strlen( $row[ $key ] ) > 150 ) { throw new RuntimeException( 'A passenger field is too long.' ); }
         }
-        return $clean;
-    }
-    private function contact( $input ) {
-        $out = array();
-        foreach ( array( 'first', 'last', 'phone', 'alternative' ) as $key ) { $out[ $key ] = substr( sanitize_text_field( $input[ $key ] ?? '' ), 0, 150 ); }
-        $out['email'] = sanitize_email( $input['email'] ?? '' );
-        if ( ! $out['first'] || ! $out['last'] || ! preg_match( '/^[+()\d\s.-]{6,30}$/', $out['phone'] ) || ! is_email( $out['email'] ) || $out['email'] !== sanitize_email( $input['confirm'] ?? '' ) ) { throw new RuntimeException( 'Check booking contact details and matching email addresses.' ); }
-        return $out;
+        $row['email'] = sanitize_email( $person['email'] ?? '' );
+        if ( ! $row['first'] || ! $row['last'] || ! $row['nationality'] || ! in_array( $row['sex'], array( 'Male', 'Female' ), true ) || ! self::date( $row['dob'] ) || ( ! empty( $person['email'] ) && ! is_email( $row['email'] ) ) ) { throw new RuntimeException( 'Check passenger name, birth date, sex, nationality and email.' ); }
+        $today = ( new DateTimeImmutable( 'now', new DateTimeZone( 'Asia/Manila' ) ) )->format( 'Y-m-d' );
+        if ( $row['dob'] > $today ) { throw new RuntimeException( 'Birth date cannot be in the future.' ); }
+        if ( ! preg_match( '/^[+()\d\s.-]{6,30}$/', $row['phone'] ) ) { throw new RuntimeException( 'Enter a valid contact number for staff to follow up.' ); }
+        // Category eligibility is verified manually by staff, including child-only requests.
+        if ( isset( $person['category'] ) ) {
+            if ( ! isset( self::CATEGORIES[ $person['category'] ] ) || ! $quote['search']['counts'][ $person['category'] ] ) { throw new RuntimeException( 'Choose a passenger category included in this booking.' ); }
+            $row['category'] = $person['category'];
+        }
+        return array( $row );
     }
     public function ajax() {
         check_ajax_referer( 'hr_oceanjet', 'nonce' );
@@ -233,9 +319,10 @@ class Hotel_Rates_Oceanjet {
                 foreach ( $result as &$list ) { usort( $list, function ( $a, $b ) { return strcmp( $a['time'], $b['time'] ); } ); } unset( $list );
                 wp_send_json_success( $result );
             }
-            if ( ! in_array( $mode, array( 'review', 'book' ), true ) ) { throw new RuntimeException( 'Unknown action.' ); }
+            if ( ! in_array( $mode, array( 'quote', 'review', 'book' ), true ) ) { throw new RuntimeException( 'Unknown action.' ); }
             $quote = $this->quote( $input );
-            $people = $this->passengers( $input, $quote ); $contact = $this->contact( $input['contact'] ?? array() );
+            if ( 'quote' === $mode ) { wp_send_json_success( $quote ); }
+            $people = $this->passengers( $input, $quote ); $contact = array_intersect_key( $people[0], array_flip( array( 'first', 'last', 'phone', 'email' ) ) );
             if ( empty( $input['consent'] ) ) { throw new RuntimeException( 'Accept the booking terms and availability notice.' ); }
             if ( 'review' === $mode ) { wp_send_json_success( $quote ); }
             if ( ! hash_equals( $quote['signature'], (string) ( $input['signature'] ?? '' ) ) ) { throw new RuntimeException( 'Fares changed. Please review the booking again.' ); }
@@ -250,7 +337,7 @@ class Hotel_Rates_Oceanjet {
             $this->adding = false;
             if ( ! $key ) { throw new RuntimeException( 'Could not add the booking. Please check your cart.' ); }
             WC()->customer->set_billing_first_name( $contact['first'] ); WC()->customer->set_billing_last_name( $contact['last'] );
-            WC()->customer->set_billing_email( $contact['email'] ); WC()->customer->set_billing_phone( $contact['phone'] );
+            if ( $contact['email'] ) { WC()->customer->set_billing_email( $contact['email'] ); } WC()->customer->set_billing_phone( $contact['phone'] );
             WC()->customer->save();
             WC()->cart->calculate_totals(); WC()->cart->set_session();
             wp_send_json_success( array( 'redirect' => wc_get_checkout_url() ) );
@@ -292,7 +379,10 @@ class Hotel_Rates_Oceanjet {
             $out[ $i ? 'Return' : 'Departure' ] = $leg['from'] . ' → ' . $leg['to'] . ' | ' . $leg['date'] . ' ' . $leg['time'] . ' | ' . $leg['class'] . ' | ' . $leg['code'] . ' | Arrival ' . $leg['arrival'] . ' (Philippine time)';
             $out[ $i ? 'Return fares' : 'Departure fares' ] = implode( '; ', $leg['breakdown'] );
         }
-        $out['Passengers'] = implode( ', ', array_map( function ( $p ) { return $p['first'] . ' ' . $p['last'] . ' (' . self::CATEGORIES[ $p['category'] ] . ')'; }, $booking['passengers'] ) );
+        $out['Passengers'] = implode( ', ', array_map( function ( $p ) { return $p['first'] . ' ' . $p['last'] . ' (' . ( self::CATEGORIES[ $p['category'] ] ?? ucfirst( $p['category'] ) ) . ')'; }, $booking['passengers'] ) );
+        $counts = $booking['quote']['search']['counts'];
+        $out['Passenger quantities'] = implode( ', ', array_map( function ( $key ) use ( $counts ) { return ( self::CATEGORIES[ $key ] ?? ucfirst( $key ) ) . ': ' . $counts[ $key ]; }, array_keys( $counts ) ) );
+        if ( count( $booking['passengers'] ) < array_sum( $counts ) ) { $out['Passenger follow-up'] = 'Staff will collect remaining passenger details and verify ages.'; }
         if ( $booking['quote']['ticket_fee'] ) { $out['Ticketing charge included'] = 'PHP ' . number_format( $booking['quote']['ticket_fee'] / 100, 2 ); }
         return $out;
     }

@@ -3,7 +3,7 @@ Contributors: islanddiaries
 Tags: hotel, tours, booking, rentals, rates, travel
 Requires at least: 5.8
 Tested up to: 6.7
-Stable tag: 1.5.242
+Stable tag: 1.5.244
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -45,9 +45,9 @@ The Hotel Rates and Tour Rates screens use the registered region and place hiera
 
 == OceanJet Booking Requests ==
 
-Open Hotel Rates > OceanJet to configure sailing records and fares, then save to create the hidden WooCommerce booking product. Place [oceanjet_booking] in an Elementor Shortcode widget. One-way and round-trip requests use accommodation and schedule selection, passenger/contact details, review, then the existing WooCommerce checkout. All sailing times and age checks use Philippine travel dates.
+Open Hotel Rates > OceanJet to configure route groups, fixed A/B directions, multiple accommodations with Adult/Child fares, and multiple departure times, then save to create the hidden WooCommerce booking product. Place [oceanjet_booking] on any page. The single-page form provides dependent ports, travel dates, separate Adult/Child quantities starting at zero, sailing cards, one passenger's details and a server-calculated subtotal before redirecting to the existing WooCommerce checkout. Child-only bookings are accepted. Each direction shares its trip code, duration, operating weekdays and blocked dates across all times and accommodations. Every accommodation uses the same fares at all departure times. First/last operating dates are removed after saving the new settings. All sailing times use Philippine time.
 
-Sailings and fares are entered manually, not synchronized with OceanJet. Staff must confirm supplier availability, verify discounted IDs, secure tickets, and enter supplier references in the WooCommerce order's OceanJet ticket fulfilment section. Payment alone does not issue a ferry ticket. This version does not reserve live seats, upload IDs, attach tickets, or automate supplier refunds/rebooking.
+Sailings and fares are entered manually, not synchronized with OceanJet. Staff must confirm supplier availability, verify ages, collect the remaining passenger details, secure tickets, and enter supplier references in the WooCommerce order's OceanJet ticket fulfilment section. Payment alone does not issue a ferry ticket. This version does not reserve live seats, upload IDs, attach tickets, or automate supplier refunds/rebooking. Legacy Minor fares carry over as Child fares; review them in admin before saving.
 
 See OCEANJET_SETUP.md for setup, fee behavior, and validation instructions.
 
@@ -82,6 +82,14 @@ Day Tour and Joiner Tour records can include repeatable Details of the Package s
 3. Complete the setup steps above before publishing linked booking products.
 
 == Changelog ==
+
+= 1.5.244 =
+* OceanJet: simplify route groups into fixed A/B directions with multiple accommodations/fares and departure times, shared trip code/duration, ongoing operation, and responsive admin settings.
+
+
+= 1.5.243 =
+* OceanJet: use one dependent booking form, grouped routes and accommodations, Adult/Child quantities, and one-passenger details with staff follow-up.
+
 
 = 1.5.242 =
 * Add admin-managed OceanJet booking requests with sailing/accommodation fares, passenger validation, review, WooCommerce checkout, and manual ticket references.
