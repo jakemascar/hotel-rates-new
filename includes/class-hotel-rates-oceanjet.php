@@ -112,7 +112,6 @@ class Hotel_Rates_Oceanjet {
                 $row = $group['directions'][ $key ] ?? null;
                 if ( ! is_array( $row ) ) { throw new RuntimeException( 'Each route group requires sections A and B.' ); }
                 $direction = array( 'active'=>!empty($row['active']), 'code'=>sanitize_text_field($row['code'] ?? ''), 'duration'=>$this->integer($row['duration'] ?? 60,1,900) );
-                if ( ! $direction['code'] ) { throw new RuntimeException( 'Enter a shared trip code for each direction.' ); }
                 $direction['days'] = array_values(array_unique(array_intersect(array_map('strval',(array)($row['days'] ?? array())),array('1','2','3','4','5','6','7'))));
                 if ( ! $direction['days'] ) { throw new RuntimeException( 'Select at least one operating weekday for each direction.' ); }
                 $direction['blocked'] = sanitize_text_field($row['blocked'] ?? '');
@@ -376,7 +375,8 @@ class Hotel_Rates_Oceanjet {
     private function summary( $booking ) {
         $out = array( 'Ticket status' => 'Awaiting supplier confirmation - not an issued ticket' );
         foreach ( $booking['quote']['legs'] as $i => $leg ) {
-            $out[ $i ? 'Return' : 'Departure' ] = $leg['from'] . ' → ' . $leg['to'] . ' | ' . $leg['date'] . ' ' . $leg['time'] . ' | ' . $leg['class'] . ' | ' . $leg['code'] . ' | Arrival ' . $leg['arrival'] . ' (Philippine time)';
+            $code = $leg['code'] ? ' | ' . $leg['code'] : '';
+            $out[ $i ? 'Return' : 'Departure' ] = $leg['from'] . ' → ' . $leg['to'] . ' | ' . $leg['date'] . ' ' . $leg['time'] . ' | ' . $leg['class'] . $code . ' | Arrival ' . $leg['arrival'] . ' (Philippine time)';
             $out[ $i ? 'Return fares' : 'Departure fares' ] = implode( '; ', $leg['breakdown'] );
         }
         $out['Passengers'] = implode( ', ', array_map( function ( $p ) { return $p['first'] . ' ' . $p['last'] . ' (' . ( self::CATEGORIES[ $p['category'] ] ?? ucfirst( $p['category'] ) ) . ')'; }, $booking['passengers'] ) );

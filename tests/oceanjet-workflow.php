@@ -70,6 +70,7 @@ function update_option($key,$settings){
     expect($reverse[0]['to_code']==='DUM','reverse port and display code mapping');
     expect($reverse[0]['fares']===array('adult'=>70000,'child'=>35000),'independent B direction fares');
     expect($settings['product_id']===99,'existing product retained');
+    if($GLOBALS['mode']==='save-no-code'){expect($settings['groups'][0]['directions']['a']['code']==='' && $settings['groups'][0]['directions']['b']['code']==='','blank optional trip codes saved');}
     echo "PASS: A/B save, multiple times/accommodations, direction fares and existing product\n";
 }
 function wp_safe_redirect(){}
@@ -82,6 +83,7 @@ foreach(array('a','b') as $key){
         array('id'=>'business','name'=>'Business Class','fares'=>array('adult'=>$key==='a'?'900.00':'1000.00','child'=>$key==='a'?'450.00':'500.00')),
     );
 }
+if(in_array($mode,array('save-no-code','book-no-code'),true)){foreach(array('a','b') as $key){$group['directions'][$key]['code']='';}}
 if(strpos($mode,'save')===0){
     $_POST=array('complete_form'=>'1','groups'=>array($group),'ticket_fee'=>'50.00');
     if($mode==='save-duplicate'){$_POST['groups'][]=$group;$GLOBALS['expected_error']='Combine both directions';}
@@ -119,6 +121,10 @@ function wp_send_json_success($data){
     $item=new TestItem();$GLOBALS['service']->order_item($item,'item',$line,null);
     expect(isset($item->meta['_hr_oceanjet']) && $item->meta['Passenger quantities']==='Adult: 3, Child: 2','private booking and public counts copied to order');
     expect(strpos($item->meta['Passenger follow-up'],'remaining passenger')!==false,'order flags staff follow-up');
+    if($GLOBALS['mode']==='book-no-code'){
+        expect($item->meta['_hr_oceanjet']['quote']['legs'][0]['code']==='','booking accepts blank trip code');
+        expect(strpos($item->meta['Departure'],' |  | ')===false,'blank trip code leaves a clean order summary');
+    }
     expect(!$GLOBALS['service']->guard_product(true,99,1),'direct product add blocked');
     echo "PASS: booking handler, checkout redirect, cart price/revalidation, order metadata and follow-up\n";exit;
 }
